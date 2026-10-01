@@ -1,0 +1,87 @@
+{% extends "pages/base.html" %}
+{% load static %}
+{% block title %}Gastronomía Local - Emprende Iquique{% endblock %}
+{% block meta_description %}Gastronomía Local — Emprende Iquique. Los mejores sabores del norte de Chile elaborados por emprendedores locales.{% endblock %}
+{% block content %}
+<main>
+  <div class="page-hero">
+    <h1>Gastronomía Local</h1>
+    <p>Los mejores sabores del norte de Chile, elaborados con ingredientes locales por emprendedores iquiqueños.</p>
+  </div>
+  <div class="section-header reveal" style="max-width:1280px;margin:0 auto;padding:0 16px;">
+    <h2>Negocios Destacados</h2>
+  </div>
+  <section class="cats-strip reveal" style="max-width:1280px;margin:20px auto 40px;padding:20px;" aria-label="Negocios de Gastronomía Local">
+    <a href="#" class="cat-item"><img src="https://images.unsplash.com/photo-1565299585323-38d6b0865b47?w=150&h=150&fit=crop" alt="Logo de El Rincón Norteño"/><span>El Rincón Norteño</span><small>Platos típicos</small></a>
+    <a href="#" class="cat-item"><img src="https://images.unsplash.com/photo-1579954115545-a95591f28bfc?w=150&h=150&fit=crop" alt="Logo de La Cevichería IQQ"/><span>La Cevichería IQQ</span><small>Mariscos frescos</small></a>
+    <a href="#" class="cat-item"><img src="https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=150&h=150&fit=crop" alt="Logo de Café del Puerto"/><span>Café del Puerto</span><small>Cafetería</small></a>
+    <a href="#" class="cat-item"><img src="https://images.unsplash.com/photo-1464305795204-6f5bbfc7fb81?w=150&h=150&fit=crop" alt="Logo de Dulces Pampinos"/><span>Dulces Pampinos</span><small>Repostería</small></a>
+    <a href="#" class="cat-item"><img src="https://images.unsplash.com/photo-1544025162-d76694265947?w=150&h=150&fit=crop" alt="Logo de La Cueva del Asado"/><span>La Cueva del Asado</span><small>Parrilla</small></a>
+    <a href="#" class="cat-item"><img src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=150&h=150&fit=crop" alt="Logo de Verde Sano IQQ"/><span>Verde Sano IQQ</span><small>Comida saludable</small></a>
+  </section>
+  <section aria-labelledby="gastro-titulo" style="max-width:1280px;margin:0 auto;padding:0 16px 60px;">
+    <div class="section-header reveal"><h2 id="gastro-titulo">Productos y Servicios</h2></div>
+    <div class="products-grid">
+      <article class="product-card reveal">
+        <div class="discount-badge">Favorito</div>
+        <img class="prod-img" src="https://images.unsplash.com/photo-1565299585323-38d6b0865b47?w=300&h=300&fit=crop" alt="Cazuela de vacuno con papas y zapallo en plato hondo"/>
+        <p class="price">$ 4.800</p><p class="original-price"></p>
+        <h3 class="title">Cazuela de Vacuno con Papas y Zapallo</h3>
+        <p class="seller">El Rincón Norteño — Platos típicos</p>
+        <button type="button" class="btn-agregar">Agregar al carrito</button>
+      </article>
+      <article class="product-card reveal">
+        <div class="discount-badge">-10%</div>
+        <img class="prod-img" src="https://images.unsplash.com/photo-1579954115545-a95591f28bfc?w=300&h=300&fit=crop" alt="Ceviche de reineta con cebolla morada y limón"/>
+        <p class="price">$ 5.400</p><p class="original-price">$ 6.000</p>
+        <h3 class="title">Ceviche de Reineta Fresca Porción Generosa</h3>
+        <p class="seller">La Cevichería IQQ — Mariscos</p>
+        <button type="button" class="btn-agregar">Agregar al carrito</button>
+      </article>
+      <article class="product-card reveal">
+        <img class="prod-img" src="https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=300&h=300&fit=crop" alt="Taza de café de especialidad con latte art"/>
+        <p class="price">$ 2.500</p><p class="original-price"></p>
+        <h3 class="title">Café de Especialidad con Leche Oat</h3>
+        <p class="seller">Café del Puerto — Cafetería</p>
+        <button type="button" class="btn-agregar">Agregar al carrito</button>
+      </article>
+      <article class="product-card reveal">
+        <img class="prod-img" src="https://images.unsplash.com/photo-1558642452-9d2a7deb7f62?w=300&h=300&fit=crop" alt="Frasco de miel artesanal con cuchara sobre tabla"/>
+        <p class="price">$ 6.500</p><p class="original-price"></p>
+        <h3 class="title">Miel Artesanal del Oasis de Pica 500g</h3>
+        <p class="seller">El Rincón Norteño — Productos locales</p>
+        <button type="button" class="btn-agregar">Agregar al carrito</button>
+      </article>
+      <article class="product-card reveal">
+        <div class="discount-badge">-15%</div>
+        <img class="prod-img" src="https://images.unsplash.com/photo-1464305795204-6f5bbfc7fb81?w=300&h=300&fit=crop" alt="Tartaletas de fruta fresca con crema pastelera"/>
+        <p class="price">$ 2.200</p><p class="original-price">$ 2.600</p>
+        <h3 class="title">Tartaleta de Fruta Fresca Artesanal</h3>
+        <p class="seller">Dulces Pampinos — Repostería</p>
+        <button type="button" class="btn-agregar">Agregar al carrito</button>
+      </article>
+      <article class="product-card reveal">
+        <img class="prod-img" src="https://images.unsplash.com/photo-1544025162-d76694265947?w=300&h=300&fit=crop" alt="Parrilla con carne asada humeante sobre carbón"/>
+        <p class="price">$ 8.500</p><p class="original-price"></p>
+        <h3 class="title">Parrilla Nortina — Asado de Tira 300g</h3>
+        <p class="seller">La Cueva del Asado — Parrilla</p>
+        <button type="button" class="btn-agregar">Agregar al carrito</button>
+      </article>
+      <article class="product-card reveal">
+        <img class="prod-img" src="https://images.unsplash.com/photo-1563379926898-05f4575a45d8?w=300&h=300&fit=crop" alt="Empanada frita de mariscos dorada y crujiente"/>
+        <p class="price">$ 1.800</p><p class="original-price"></p>
+        <h3 class="title">Empanada Frita de Mariscos Artesanal</h3>
+        <p class="seller">La Cevichería IQQ — Mariscos</p>
+        <button type="button" class="btn-agregar">Agregar al carrito</button>
+      </article>
+      <article class="product-card reveal">
+        <img class="prod-img" src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=300&h=300&fit=crop" alt="Ensalada fresca con vegetales coloridos y aderezo"/>
+        <p class="price">$ 3.500</p><p class="original-price"></p>
+        <h3 class="title">Bowl Vegano con Quinoa y Verduras del Norte</h3>
+        <p class="seller">Verde Sano IQQ — Comida saludable</p>
+        <button type="button" class="btn-agregar">Agregar al carrito</button>
+      </article>
+    </div>
+  </section>
+</main>
+{% endblock %}

@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Anexo: Uso de Inteligencia Artificial - Emprende Iquique</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --accent: #4a5d23;
+      --accent-light: #6b8e23;
+      --text: #333;
+      --muted: #666;
+      --border: #ddd;
+      --bg: #f4f5f2;
+      --card: #fff;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Roboto', sans-serif; background: var(--bg); color: var(--text); padding: 40px 20px; }
+    .container { max-width: 800px; margin: 0 auto; }
+
+    /* Portada */
+    .cover {
+      background: var(--accent);
+      color: #fff;
+      border-radius: 12px;
+      padding: 50px 40px;
+      text-align: center;
+      margin-bottom: 40px;
+    }
+    .cover h1 { font-size: 28px; margin-bottom: 8px; }
+    .cover p  { font-size: 16px; color: #ccc; }
+    .cover .badge {
+      display: inline-block; margin-top: 20px;
+      background: var(--accent-light); color: #fff;
+      padding: 6px 18px; border-radius: 20px; font-size: 13px; font-weight: 700;
+    }
+
+    /* Secciones */
+    .section {
+      background: var(--card);
+      border-radius: 12px;
+      padding: 32px;
+      margin-bottom: 24px;
+      border: 1px solid var(--border);
+      box-shadow: 0 2px 8px rgba(0,0,0,.04);
+    }
+    .section h2 {
+      font-size: 18px;
+      color: var(--accent);
+      border-left: 4px solid var(--accent);
+      padding-left: 10px;
+      margin-bottom: 20px;
+    }
+    .section p { font-size: 15px; line-height: 1.8; color: var(--text); margin-bottom: 12px; }
+    .section p:last-child { margin-bottom: 0; }
+
+    /* Tabla de prompts */
+    table { width: 100%; border-collapse: collapse; margin-top: 8px; font-size: 14px; }
+    thead th {
+      background: var(--accent); color: #fff;
+      padding: 12px 14px; text-align: left; font-weight: 600;
+    }
+    tbody td { padding: 12px 14px; border-bottom: 1px solid var(--border); vertical-align: top; line-height: 1.6; }
+    tbody tr:last-child td { border-bottom: none; }
+    tbody tr:nth-child(even) { background: #f9f9f7; }
+
+    /* Chips de ajuste */
+    .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+    .chip {
+      background: #e8f0d6; color: var(--accent);
+      padding: 4px 12px; border-radius: 20px; font-size: 13px; font-weight: 500;
+    }
+
+    /* Declaración */
+    .declaration {
+      background: #e8f0d6; border: 1px solid #c5d99b;
+      border-radius: 10px; padding: 20px 24px; margin-top: 10px;
+      font-size: 14px; line-height: 1.8; color: var(--accent);
+    }
+
+    /* Footer */
+    .doc-footer { text-align: center; font-size: 13px; color: var(--muted); margin-top: 40px; }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <!-- Portada -->
+  <header class="cover">
+    <h1>Anexo: Uso de Inteligencia Artificial</h1>
+    <p>Evaluación Sumativa 1 — Programación Front End TI3031 · Otoño 2026</p>
+    <p style="margin-top:8px;">Proyecto: <strong>Emprende Iquique</strong> — Vitrina de Emprendedores</p>
+    <div class="badge">INACAP Iquique</div>
+  </header>
+
+  <!-- 1. Herramienta utilizada -->
+  <section class="section">
+    <h2>1. Herramienta Utilizada</h2>
+    <p>
+      <strong>Herramienta:</strong> Claude (Anthropic) — claude.ai<br/>
+      <strong>Versión / Modelo:</strong> Claude Sonnet (acceso web gratuito)<br/>
+      <strong>Período de uso:</strong> Durante el desarrollo del sitio web estático, sesión de trabajo única.
+    </p>
+    <p>
+      La herramienta fue utilizada como apoyo para la generación de estructura HTML inicial, 
+      sugerencias de CSS y revisión de criterios de accesibilidad. No se empleó para generar 
+      el contenido temático del sitio (textos, productos y nombres de emprendedores fueron 
+      definidos por el equipo).
+    </p>
+  </section>
+
+  <!-- 2. Prompts principales -->
+  <section class="section">
+    <h2>2. Prompts Principales Empleados</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Prompt utilizado</th>
+          <th>Propósito</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1</td>
+          <td>"Crea una estructura HTML5 semántica para una vitrina digital de emprendedores locales de Iquique, con header, nav, main, secciones y footer."</td>
+          <td>Obtener la estructura base del sitio con etiquetas semánticas.</td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td>"Aplica estilos CSS3 con variables de color, modo oscuro, grilla de productos con grid y tarjetas con hover. Usa paleta de colores verdes oliva."</td>
+          <td>Generar el sistema de estilos visual del sitio.</td>
+        </tr>
+        <tr>
+          <td>3</td>
+          <td>"¿Qué atributos ARIA y criterios WCAG debo aplicar a un formulario de login con pestañas para que sea accesible?"</td>
+          <td>Mejorar la accesibilidad del modal de inicio de sesión.</td>
+        </tr>
+        <tr>
+          <td>4</td>
+          <td>"Revisa este código HTML y dime qué le falta para cumplir con una rúbrica de evaluación que considera HTML5 semántico, CSS3, accesibilidad y buenas prácticas."</td>
+          <td>Identificar mejoras necesarias antes de la entrega.</td>
+        </tr>
+        <tr>
+          <td>5</td>
+          <td>"Corrige el código pero mantén el diseño exactamente igual. Separa el CSS a un archivo externo, haz el h1 visible, crea páginas adicionales con navegación real y corrige los atributos alt de las imágenes."</td>
+          <td>Aplicar correcciones de buenas prácticas al código existente.</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- 3. Tipo de apoyo recibido -->
+  <section class="section">
+    <h2>3. Tipo de Apoyo Recibido</h2>
+    <p>
+      El uso de IA se centró en tres áreas principales:
+    </p>
+    <p>
+      <strong>Generación de estructura y código:</strong> La IA propuso una estructura HTML semántica inicial 
+      con las etiquetas correctas (`header`, `nav`, `main`, `section`, `article`, `footer`). 
+      El equipo revisó cada etiqueta y confirmó que correspondía al rol real de cada sección del sitio.
+    </p>
+    <p>
+      <strong>Sugerencias de estilo CSS3:</strong> La IA generó un sistema de variables CSS, clases para modo 
+      oscuro y un layout con Flexbox y Grid. El equipo ajustó la paleta de colores para que 
+      representara la identidad del norte de Chile (tonos verdes oliva y tierra).
+    </p>
+    <p>
+      <strong>Revisión de accesibilidad:</strong> Se consultó sobre criterios WCAG para formularios, 
+      contraste de colores, atributos ARIA y texto alternativo de imágenes. Las sugerencias 
+      fueron evaluadas y aplicadas selectivamente según su pertinencia para el sitio.
+    </p>
+  </section>
+
+  <!-- 4. Ajustes y modificaciones -->
+  <section class="section">
+    <h2>4. Ajustes y Modificaciones Realizadas</h2>
+    <p>Las respuestas de la IA fueron revisadas críticamente y modificadas en los siguientes aspectos:</p>
+    <div class="chips">
+      <span class="chip">Temática cambiada a emprendedores locales de Iquique</span>
+      <span class="chip">Paleta de color ajustada (verdes oliva en lugar de azul genérico)</span>
+      <span class="chip">Nombres de negocios y productos definidos por el equipo</span>
+      <span class="chip">Imágenes seleccionadas manualmente desde Unsplash</span>
+      <span class="chip">Se agregó sección de preguntas frecuentes en contacto.html</span>
+      <span class="chip">Se reescribieron los textos descriptivos del slider</span>
+      <span class="chip">Se agregó aria-modal="true" que la IA no había incluido</span>
+      <span class="chip">Se separó el JavaScript a main.js con manejo de errores</span>
+      <span class="chip">Se añadió cierre de modal con tecla Escape</span>
+      <span class="chip">Se corrigió el año del footer de 2024 a 2026</span>
+    </div>
+  </section>
+
+  <!-- Declaración -->
+  <section class="section">
+    <h2>5. Declaración de Uso Responsable</h2>
+    <div class="declaration">
+      Los integrantes de este equipo declaramos que la herramienta de inteligencia artificial fue utilizada 
+      únicamente como apoyo en el proceso de desarrollo, y que todas las sugerencias recibidas fueron 
+      revisadas, evaluadas y modificadas con criterio propio. El diseño conceptual del sitio, la elección 
+      de la temática, el contenido textual y la toma de decisiones estructurales fueron realizados por 
+      el equipo. Este anexo ha sido elaborado en cumplimiento de las instrucciones de la evaluación 
+      sumativa N.°1 del curso Programación Front End TI3031, INACAP Iquique, Otoño 2026.
+    </div>
+  </section>
+
+  <footer class="doc-footer">
+    <p>Programación Front End — TI3031 · Otoño 2026 · INACAP Iquique</p>
+  </footer>
+
+</div>
+</body>
+</html>

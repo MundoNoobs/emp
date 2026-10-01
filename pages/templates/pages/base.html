@@ -1,0 +1,244 @@
+{% load static %}<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="description" content="{% block meta_description %}Emprende Iquique - Vitrina digital para apoyar a los emprendedores locales. Encuentra productos y servicios de nuestra región.{% endblock %}" />
+  <title>{% block title %}Emprende Iquique - Vitrina de Emprendedores{% endblock %}</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="{% static 'pages/css/styles.css' %}" />
+  {% block extra_head %}{% endblock %}
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════
+     HEADER
+     ══════════════════════════════════════════ -->
+<header>
+  <div class="logo">Emprende<span>Iquique</span></div>
+
+  <div class="search-wrap">
+    <label for="buscar" class="sr-only">Buscar emprendimientos o productos</label>
+    <input type="search" id="buscar" placeholder="Busca artesanías, comida, servicios... (Enter para búsqueda avanzada)"/>
+    <button type="button" aria-label="Buscar">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+    </button>
+  </div>
+
+  <div class="header-right">
+    <!-- Botón Accesibilidad -->
+    <div class="accessibility-wrap" id="accessibility-wrap">
+      <button type="button" class="accessibility-toggle" id="btn-accessibility" onclick="toggleAccessibility()" aria-label="Opciones de accesibilidad" aria-expanded="false" aria-haspopup="true">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true">
+          <circle cx="12" cy="4" r="2"/>
+          <path d="M12 22c-4.97 0-9-4.03-9-9 0-4.97 4.03-9 9-9s9 4.03 9 9c0 4.97-4.03 9-9 9zm0-16c-3.86 0-7 3.14-7 7s3.14 7 7 7 7-3.14 7-7-3.14-7-7-7zm-1 11h2v-6h-2v6zm0-8h2V7h-2v2z"/>
+        </svg>
+        <span>Accesibilidad</span>
+      </button>
+      <div class="accessibility-panel" id="accessibility-panel" aria-hidden="true" role="dialog" aria-label="Panel de accesibilidad">
+        <p class="acc-section-title">Tamaño de texto</p>
+        <div class="acc-row">
+          <button type="button" class="acc-btn" onclick="changeFontSize(-1)" aria-label="Disminuir tamaño de texto">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true"><path d="M9 4v3h5v12h3V7h5V4H9zm-6 8h3v7h3v-7h3V9H3v3z"/></svg>
+            DISMINUIR
+          </button>
+          <button type="button" class="acc-btn" onclick="changeFontSize(1)" aria-label="Aumentar tamaño de texto">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true"><path d="M9 4v3h5v12h3V7h5V4H9zm-6 8h3v7h3v-7h3V9H3v3z"/></svg>
+            AUMENTAR
+          </button>
+        </div>
+        <p class="acc-section-title">Otras opciones</p>
+        <div class="acc-row">
+          <button type="button" class="acc-btn" id="btn-high-contrast" onclick="toggleHighContrast()" aria-label="Activar alto contraste">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true"><path d="M12 3a9 9 0 0 0 0 18V3z"/></svg>
+            ALTO CONTRASTE
+          </button>
+          <button type="button" class="acc-btn" id="btn-tts" onclick="toggleTextToSpeech()" aria-label="Activar texto a voz">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/></svg>
+            TEXTO DE VOZ
+          </button>
+        </div>
+        <button type="button" class="acc-reset" onclick="resetAccessibility()" aria-label="Restablecer todas las opciones de accesibilidad">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" aria-hidden="true"><path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/></svg>
+          RESTABLECER
+        </button>
+      </div>
+    </div>
+
+    <button type="button" class="theme-toggle" onclick="toggleTheme()" id="btn-theme" aria-label="Cambiar tema visual">
+      <svg id="theme-icon" viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true">
+        <path id="theme-path" d="M12 3a9 9 0 1 0 9 9c0-.46-.04-.92-.1-1.36a5.389 5.389 0 0 1-4.4 2.26 5.403 5.403 0 0 1-3.14-9.8c-.44-.06-.9-.1-1.36-.1z"/>
+      </svg>
+      <span id="theme-text">Noche</span>
+    </button>
+
+    <!-- Botón Carrito -->
+    <button type="button" class="icon-group cart-btn" onclick="openCart()" aria-label="Abrir carrito de compras">
+      <div style="position:relative">
+        <svg viewBox="0 0 24 24" aria-hidden="true" width="22" height="22" fill="#fff">
+          <path d="M7 18c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm10 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zM5.2 5l.94 2H18l-1.68 6H8.37L5.2 5H2V3h4l3.68 9h6.32L18 7H5.2z"/>
+        </svg>
+        <span class="badge" id="cart-badge" aria-live="polite">0</span>
+      </div>
+      <span>Carrito</span>
+    </button>
+  </div>
+</header>
+
+<!-- ══════════════════════════════════════════
+     NAVEGACIÓN
+     ══════════════════════════════════════════ -->
+<nav aria-label="Menú principal">
+  <a href="{% url 'inicio' %}" class="{% if active == 'inicio' %}active{% endif %}">Inicio</a>
+  <a href="{% url 'gastronomia' %}" class="{% if active == 'gastronomia' %}active{% endif %}">Gastronomía Local</a>
+  <a href="{% url 'artesanias' %}" class="{% if active == 'artesanias' %}active{% endif %}">Artesanías</a>
+  <a href="{% url 'moda' %}" class="{% if active == 'moda' %}active{% endif %}">Moda y Diseño</a>
+  <a href="{% url 'tecnologia' %}" class="{% if active == 'tecnologia' %}active{% endif %}">Tecnología</a>
+  <a href="{% url 'servicios' %}" class="{% if active == 'servicios' %}active{% endif %}">Servicios</a>
+</nav>
+
+<!-- ══════════════════════════════════════════
+     MAIN
+     ══════════════════════════════════════════ -->
+{% block content %}{% endblock %}
+
+<!-- ══════════════════════════════════════════
+     FOOTER
+     ══════════════════════════════════════════ -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-col">
+      <h3>Emprende Iquique</h3>
+      <ul>
+        <li><a href="{% url 'nosotros' %}">Sobre el proyecto</a></li>
+        <li><a href="{% url 'nosotros' %}#como-funciona">¿Cómo funciona?</a></li>
+        <li><a href="{% url 'nosotros' %}#comunidad">Comunidad de Emprendedores</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h3>Ayuda y Soporte</h3>
+      <ul>
+        <li><a href="{% url 'contacto' %}#faq">Preguntas Frecuentes</a></li>
+        <li><a href="{% url 'contacto' %}">Contacto</a></li>
+        <li><a href="#">Términos y Condiciones</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2026 Emprende Iquique. Desarrollado para impulsar el comercio local.</p>
+  </div>
+</footer>
+
+<!-- ══════════════════════════════════════════
+     BOTÓN FLOTANTE MENÚ (Nosotros / Contacto)
+     ══════════════════════════════════════════ -->
+<div class="floating-menu-wrap" id="floating-menu-wrap">
+  <div class="floating-menu-options" id="floating-menu-options" aria-hidden="true">
+    <a href="{% url 'nosotros' %}" class="floating-menu-item">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+      Nosotros
+    </a>
+    <a href="{% url 'contacto' %}" class="floating-menu-item">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+      Contacto
+    </a>
+  </div>
+  <button type="button" class="floating-menu-btn" id="floating-menu-btn" onclick="toggleFloatingMenu()" aria-label="Información" aria-expanded="false">
+    <svg id="floating-menu-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16v2H4zm0 5h16v2H4zm0 5h16v2H4z"/></svg>
+    Información
+  </button>
+</div>
+
+{% block floating_login %}
+<!-- ══════════════════════════════════════════
+     BOTÓN FLOTANTE (Login / Usuario)
+     ══════════════════════════════════════════ -->
+<button type="button" class="floating-login" id="floating-btn" onclick="openModal('cliente')" aria-label="Iniciar Sesión">
+  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+  Iniciar Sesión
+</button>
+{% endblock %}
+
+{% block auth_modal %}
+<!-- ══════════════════════════════════════════
+     MODAL DE AUTENTICACIÓN
+     ══════════════════════════════════════════ -->
+<div class="modal-overlay" id="authModal" aria-hidden="true">
+  <div class="modal-box" role="dialog" aria-labelledby="modal-title" aria-modal="true">
+    <button type="button" class="close-btn" onclick="closeModal()" aria-label="Cerrar ventana">×</button>
+
+    <div class="modal-tabs" role="tablist" aria-label="Tipo de usuario">
+      <button type="button" class="tab-btn active" id="tab-cliente" role="tab" aria-selected="true" onclick="setRole('cliente')">Soy Cliente</button>
+      <button type="button" class="tab-btn" id="tab-emprendedor" role="tab" aria-selected="false" onclick="setRole('emprendedor')">Soy Emprendedor</button>
+    </div>
+
+    <h2 id="modal-title">Acceso Clientes</h2>
+
+    <!-- Mensaje de error -->
+    <div id="modal-error" class="modal-error" role="alert" style="display:none;"></div>
+
+    <!-- Formulario dinámico -->
+    <form id="auth-form" novalidate>
+      <div id="modal-form-body">
+        <div class="form-group">
+          <label for="auth-email">Correo electrónico</label>
+          <input type="email" id="auth-email" placeholder="ejemplo@correo.com" required autocomplete="email"/>
+        </div>
+        <div class="form-group">
+          <label for="auth-pass">Contraseña</label>
+          <input type="password" id="auth-pass" placeholder="Tu contraseña" required autocomplete="current-password"/>
+        </div>
+        <button type="submit" class="btn-submit">Ingresar a mi cuenta</button>
+      </div>
+    </form>
+
+    <div class="modal-footer" id="modalFooter">
+      ¿No tienes cuenta? <button type="button" onclick="toggleAuthMode()">Regístrate aquí</button>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block cart_panel %}
+<!-- ══════════════════════════════════════════
+     PANEL LATERAL CARRITO
+     ══════════════════════════════════════════ -->
+<div class="cart-overlay" id="cart-overlay" aria-hidden="true"></div>
+
+<aside class="cart-panel" id="cart-panel" role="dialog" aria-label="Carrito de compras" aria-modal="true">
+  <div class="cart-header">
+    <h2>Tu Carrito</h2>
+    <button type="button" class="cart-close" onclick="closeCart()" aria-label="Cerrar carrito">×</button>
+  </div>
+
+  <!-- Estado vacío -->
+  <div class="cart-empty" id="cart-empty" aria-live="polite">
+    <svg viewBox="0 0 24 24" aria-hidden="true" width="64" height="64" fill="var(--border-color)">
+      <path d="M7 18c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm10 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zM5.2 5l.94 2H18l-1.68 6H8.37L5.2 5H2V3h4l3.68 9h6.32L18 7H5.2z"/>
+    </svg>
+    <p>Tu carrito está vacío</p>
+    <small>Inicia sesión y agrega productos de los emprendedores locales.</small>
+  </div>
+
+  <!-- Lista de productos -->
+  <div class="cart-items" id="cart-items" aria-live="polite"></div>
+
+  <!-- Footer del carrito -->
+  <div class="cart-footer" id="cart-footer" style="display:none;">
+    <div class="cart-total-row">
+      <span>Total</span>
+      <strong id="cart-total">$0</strong>
+    </div>
+    <button type="button" class="btn-checkout" onclick="checkout()">Finalizar Pedido</button>
+    <button type="button" class="btn-clear" onclick="clearCart()">Vaciar carrito</button>
+  </div>
+</aside>
+
+<!-- Toasts -->
+<div id="toast-container" aria-live="polite"></div>
+{% endblock %}
+
+<script src="{% static 'pages/js/main.js' %}"></script>
+{% block extra_scripts %}{% endblock %}
+</body>
+</html>

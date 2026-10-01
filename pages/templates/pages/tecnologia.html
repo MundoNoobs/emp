@@ -1,0 +1,88 @@
+{% extends "pages/base.html" %}
+{% load static %}
+{% block title %}Tecnología - Emprende Iquique{% endblock %}
+{% block meta_description %}Tecnología — Emprende Iquique. Reparaciones y servicios tecnológicos de emprendedores locales.{% endblock %}
+{% block content %}
+<main>
+  <div class="page-hero">
+    <h1>Tecnología e Innovación</h1>
+    <p>Servicios de reparación, productos tech y soluciones digitales ofrecidas por emprendedores iquiqueños.</p>
+  </div>
+  <div class="section-header reveal" style="max-width:1280px;margin:0 auto;padding:0 16px;">
+    <h2>Negocios Destacados</h2>
+  </div>
+  <section class="cats-strip reveal" style="max-width:1280px;margin:20px auto 40px;padding:20px;" aria-label="Negocios de Tecnología">
+    <a href="#" class="cat-item"><img src="https://images.unsplash.com/photo-1531297484001-80022131f5a1?w=150&h=150&fit=crop" alt="Logo de Tech Iquique"/><span>Tech Iquique</span><small>Reparaciones</small></a>
+    <a href="#" class="cat-item"><img src="https://images.unsplash.com/photo-1518770660439-4636190af475?w=150&h=150&fit=crop" alt="Logo de ByteNorte"/><span>ByteNorte</span><small>Computadores</small></a>
+    <a href="#" class="cat-item"><img src="https://images.unsplash.com/photo-1547658719-da2b51169166?w=150&h=150&fit=crop" alt="Logo de WebIQQ"/><span>WebIQQ</span><small>Desarrollo web</small></a>
+    <a href="#" class="cat-item"><img src="https://images.unsplash.com/photo-1563770660941-20978e870e26?w=150&h=150&fit=crop" alt="Logo de IQQ Print"/><span>IQQ Print</span><small>Impresión 3D</small></a>
+    <a href="#" class="cat-item"><img src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=150&h=150&fit=crop" alt="Logo de CiberNorte"/><span>CiberNorte</span><small>Ciberseguridad</small></a>
+    <a href="#" class="cat-item"><img src="https://images.unsplash.com/photo-1473968512647-3e447244af8f?w=150&h=150&fit=crop" alt="Logo de DroneNorte"/><span>DroneNorte</span><small>Fotografía aérea</small></a>
+  </section>
+  <section aria-labelledby="tech-titulo" style="max-width:1280px;margin:0 auto;padding:0 16px 60px;">
+    <div class="section-header reveal"><h2 id="tech-titulo">Productos y Servicios</h2></div>
+    <div class="products-grid">
+      <article class="product-card reveal">
+        <div class="discount-badge">Popular</div>
+        <img class="prod-img" src="{% static 'pages/img/reparacion.jpg' %}" alt="Técnico reparando pantalla rota de smartphone"/>
+        <p class="price">$ 18.000</p><p class="original-price"></p>
+        <h3 class="title">Reparación de Pantalla Smartphone — Todas las marcas</h3>
+        <p class="seller">Tech Iquique — Reparaciones</p>
+        <button type="button" class="btn-agregar">Agregar al carrito</button>
+      </article>
+      <article class="product-card reveal">
+        <img class="prod-img" src="https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=300&h=300&fit=crop" alt="Teclado mecánico RGB ensamblado con switch blue"/>
+        <p class="price">$ 65.000</p><p class="original-price"></p>
+        <h3 class="title">Teclado Mecánico Ensamblado a Pedido Switch Blue</h3>
+        <p class="seller">ByteNorte — Computadores</p>
+        <button type="button" class="btn-agregar">Agregar al carrito</button>
+      </article>
+      <article class="product-card reveal">
+        <div class="discount-badge">-25%</div>
+        <img class="prod-img" src="https://images.unsplash.com/photo-1563770660941-20978e870e26?w=300&h=300&fit=crop" alt="Figura de plástico impresa en 3D con detalle fino"/>
+        <p class="price">$ 7.500</p><p class="original-price">$ 10.000</p>
+        <h3 class="title">Figura Impresa en 3D Personalizada hasta 15cm</h3>
+        <p class="seller">IQQ Print — Impresión 3D</p>
+        <button type="button" class="btn-agregar">Agregar al carrito</button>
+      </article>
+      <article class="product-card reveal">
+        <img class="prod-img" src="https://images.unsplash.com/photo-1593642632559-0c6d3fc62b89?w=300&h=300&fit=crop" alt="Laptop abierta en proceso de limpieza y mantenimiento"/>
+        <p class="price">$ 15.000</p><p class="original-price"></p>
+        <h3 class="title">Limpieza Profunda y Mantenimiento de Notebook</h3>
+        <p class="seller">Tech Iquique — Reparaciones</p>
+        <button type="button" class="btn-agregar">Agregar al carrito</button>
+      </article>
+      <article class="product-card reveal">
+        <img class="prod-img" src="https://images.unsplash.com/photo-1547658719-da2b51169166?w=300&h=300&fit=crop" alt="Computador con código de sitio web en pantalla grande"/>
+        <p class="price">$ 120.000</p><p class="original-price"></p>
+        <h3 class="title">Desarrollo Web Básico con Dominio Incluido</h3>
+        <p class="seller">WebIQQ — Desarrollo web</p>
+        <button type="button" class="btn-agregar">Agregar al carrito</button>
+      </article>
+      <article class="product-card reveal">
+        <div class="discount-badge">Nuevo</div>
+        <img class="prod-img" src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=300&h=300&fit=crop" alt="Panel de monitoreo de seguridad digital en pantalla"/>
+        <p class="price">$ 45.000</p><p class="original-price"></p>
+        <h3 class="title">Auditoría de Seguridad Informática para PYMES</h3>
+        <p class="seller">CiberNorte — Ciberseguridad</p>
+        <button type="button" class="btn-agregar">Agregar al carrito</button>
+      </article>
+      <article class="product-card reveal">
+        <img class="prod-img" src="https://images.unsplash.com/photo-1473968512647-3e447244af8f?w=300&h=300&fit=crop" alt="Drone sobrevolando el desierto nortino al atardecer"/>
+        <p class="price">$ 55.000</p><p class="original-price"></p>
+        <h3 class="title">Sesión Fotografía Aérea con Drone — 30 min</h3>
+        <p class="seller">DroneNorte — Fotografía aérea</p>
+        <button type="button" class="btn-agregar">Agregar al carrito</button>
+      </article>
+      <article class="product-card reveal">
+        <div class="discount-badge">-10%</div>
+        <img class="prod-img" src="https://images.unsplash.com/photo-1612815154858-60aa4c59eaa6?w=300&h=300&fit=crop" alt="Técnico en domicilio configurando router y red WiFi"/>
+        <p class="price">$ 12.000</p><p class="original-price">$ 13.500</p>
+        <h3 class="title">Soporte Técnico a Domicilio — Zona Iquique</h3>
+        <p class="seller">Tech Iquique — Reparaciones</p>
+        <button type="button" class="btn-agregar">Agregar al carrito</button>
+      </article>
+    </div>
+  </section>
+</main>
+{% endblock %}

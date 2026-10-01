@@ -1,0 +1,88 @@
+{% extends "pages/base.html" %}
+{% load static %}
+{% block title %}Moda y Diseño - Emprende Iquique{% endblock %}
+{% block meta_description %}Moda y Diseño — Emprende Iquique. Prendas y accesorios creados por diseñadores locales.{% endblock %}
+{% block content %}
+<main>
+  <div class="page-hero">
+    <h1>Moda y Diseño Local</h1>
+    <p>Ropa, accesorios y diseño independiente creado por talentos iquiqueños con identidad del norte grande.</p>
+  </div>
+  <div class="section-header reveal" style="max-width:1280px;margin:0 auto;padding:0 16px;">
+    <h2>Negocios Destacados</h2>
+  </div>
+  <section class="cats-strip reveal" style="max-width:1280px;margin:20px auto 40px;padding:20px;" aria-label="Negocios de Moda y Diseño">
+    <a href="#" class="cat-item"><img src="https://images.unsplash.com/photo-1523381210434-271e8be1f52b?w=150&h=150&fit=crop" alt="Logo de Boutique Norte"/><span>Boutique Norte</span><small>Ropa casual</small></a>
+    <a href="#" class="cat-item"><img src="https://images.unsplash.com/photo-1611652022419-a9419f74343d?w=150&h=150&fit=crop" alt="Logo de Joyería Pampa"/><span>Joyería Pampa</span><small>Accesorios</small></a>
+    <a href="#" class="cat-item"><img src="https://images.unsplash.com/photo-1618354691373-d851c5c3a990?w=150&h=150&fit=crop" alt="Logo de Studio Tarapacá"/><span>Studio Tarapacá</span><small>Diseño indie</small></a>
+    <a href="#" class="cat-item"><img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=150&h=150&fit=crop" alt="Logo de Calzado IQQ"/><span>Calzado IQQ</span><small>Calzado local</small></a>
+    <a href="#" class="cat-item"><img src="https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=150&h=150&fit=crop" alt="Logo de Lino Nortino"/><span>Lino Nortino</span><small>Ropa de lino</small></a>
+    <a href="#" class="cat-item"><img src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=150&h=150&fit=crop" alt="Logo de Serigrafía Norte"/><span>Serigrafía Norte</span><small>Estampados</small></a>
+  </section>
+  <section aria-labelledby="moda-titulo" style="max-width:1280px;margin:0 auto;padding:0 16px 60px;">
+    <div class="section-header reveal"><h2 id="moda-titulo">Productos y Servicios</h2></div>
+    <div class="products-grid">
+      <article class="product-card reveal">
+        <div class="discount-badge">-20%</div>
+        <img class="prod-img" src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=300&h=300&fit=crop" alt="Polera blanca de algodón orgánico unisex vista frontal"/>
+        <p class="price">$ 9.990</p><p class="original-price">$ 12.500</p>
+        <h3 class="title">Polera Algodón Orgánico Serigrafía Norte</h3>
+        <p class="seller">Serigrafía Norte — Estampados</p>
+        <button type="button" class="btn-agregar">Agregar al carrito</button>
+      </article>
+      <article class="product-card reveal">
+        <img class="prod-img" src="https://images.unsplash.com/photo-1611652022419-a9419f74343d?w=300&h=300&fit=crop" alt="Collar artesanal de turquesa natural con plata fina"/>
+        <p class="price">$ 26.000</p><p class="original-price"></p>
+        <h3 class="title">Collar Turquesa y Plata Fina</h3>
+        <p class="seller">Joyería Pampa — Accesorios</p>
+        <button type="button" class="btn-agregar">Agregar al carrito</button>
+      </article>
+      <article class="product-card reveal">
+        <div class="discount-badge">Nuevo</div>
+        <img class="prod-img" src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=300&h=300&fit=crop" alt="Zapatillas con estampado del desierto atacameño"/>
+        <p class="price">$ 38.000</p><p class="original-price"></p>
+        <h3 class="title">Zapatillas Diseño Desierto Edición Limitada</h3>
+        <p class="seller">Calzado IQQ — Calzado local</p>
+        <button type="button" class="btn-agregar">Agregar al carrito</button>
+      </article>
+      <article class="product-card reveal">
+        <img class="prod-img" src="https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=300&h=300&fit=crop" alt="Parka reversible beige y verde musgo en modelo femenino"/>
+        <p class="price">$ 42.000</p><p class="original-price"></p>
+        <h3 class="title">Polera de lino Griz, unisex</h3>
+        <p class="seller">Lino Nortino — Ropa de lino</p>
+        <button type="button" class="btn-agregar">Agregar al carrito</button>
+      </article>
+      <article class="product-card reveal">
+        <div class="discount-badge">-15%</div>
+        <img class="prod-img" src="https://images.unsplash.com/photo-1523381210434-271e8be1f52b?w=300&h=300&fit=crop" alt="Camisa de lino manga corta con estampado geométrico"/>
+        <p class="price">$ 18.700</p><p class="original-price">$ 22.000</p>
+        <h3 class="title">Camisa Lino Estampado Geométrico Andino</h3>
+        <p class="seller">Studio Tarapacá — Diseño indie</p>
+        <button type="button" class="btn-agregar">Agregar al carrito</button>
+      </article>
+      <article class="product-card reveal">
+        <img class="prod-img" src="https://images.unsplash.com/photo-1584916201218-f4242ceb4809?w=300&h=300&fit=crop" alt="Bolso tote de lona reciclada con serigrafía local"/>
+        <p class="price">$ 15.500</p><p class="original-price"></p>
+        <h3 class="title">Bolso Tote Lona Reciclada Serigrafía IQQ</h3>
+        <p class="seller">Boutique Norte — Ropa casual</p>
+        <button type="button" class="btn-agregar">Agregar al carrito</button>
+      </article>
+      <article class="product-card reveal">
+        <img class="prod-img" src="https://images.unsplash.com/photo-1618354691373-d851c5c3a990?w=300&h=300&fit=crop" alt="Gorra bordada a mano con motivos nortinos en tela"/>
+        <p class="price">$ 11.500</p><p class="original-price"></p>
+        <h3 class="title">Gorra Bordada Motivos Nortinos</h3>
+        <p class="seller">Studio Tarapacá — Diseño indie</p>
+        <button type="button" class="btn-agregar">Agregar al carrito</button>
+      </article>
+      <article class="product-card reveal">
+        <div class="discount-badge">-10%</div>
+        <img class="prod-img" src="https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=300&h=300&fit=crop" alt="Mochila de cuero y tela con diseño artesanal norteño"/>
+        <p class="price">$ 34.000</p><p class="original-price">$ 38.000</p>
+        <h3 class="title">Mochila Cuero y Tela Diseño Nortino</h3>
+        <p class="seller">Boutique Norte — Ropa casual</p>
+        <button type="button" class="btn-agregar">Agregar al carrito</button>
+      </article>
+    </div>
+  </section>
+</main>
+{% endblock %}

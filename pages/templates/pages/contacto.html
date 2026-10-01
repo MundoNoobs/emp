@@ -1,0 +1,99 @@
+{% extends "pages/base.html" %}
+{% block title %}Contacto - Emprende Iquique{% endblock %}
+{% block meta_description %}Contacto - Emprende Iquique. Escríbenos tus preguntas o regístrate como emprendedor.{% endblock %}
+
+{% block content %}
+<main>
+  <div class="page-hero">
+    <h1>Contáctanos</h1>
+    <p>¿Tienes preguntas o quieres registrar tu emprendimiento? Escríbenos, te respondemos a la brevedad.</p>
+  </div>
+
+  <!-- Formulario de contacto -->
+  <section aria-labelledby="form-titulo">
+    <div class="content-section" style="text-align:center; margin-bottom: 10px;">
+      <h2 id="form-titulo">Envíanos un mensaje</h2>
+    </div>
+
+    <form class="contact-form reveal" onsubmit="handleContactForm(event)" novalidate>
+      <div class="form-group">
+        <label for="nombre">Nombre completo <span aria-hidden="true">*</span></label>
+        <input type="text" id="nombre" name="nombre" placeholder="Tu nombre" required autocomplete="name"/>
+      </div>
+      <div class="form-group">
+        <label for="email">Correo electrónico <span aria-hidden="true">*</span></label>
+        <input type="email" id="email" name="email" placeholder="ejemplo@correo.com" required autocomplete="email"/>
+      </div>
+      <div class="form-group">
+        <label for="motivo">Motivo de contacto</label>
+        <select id="motivo" name="motivo">
+          <option value="">Selecciona una opción</option>
+          <option value="emprendedor">Quiero registrar mi negocio</option>
+          <option value="cliente">Consulta como cliente</option>
+          <option value="soporte">Soporte técnico</option>
+          <option value="otro">Otro</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="mensaje">Mensaje <span aria-hidden="true">*</span></label>
+        <textarea id="mensaje" name="mensaje" placeholder="Escribe tu mensaje aquí..." required></textarea>
+      </div>
+      <button type="submit" class="btn-primary">Enviar mensaje</button>
+      <div id="form-success" role="alert" aria-live="polite" style="display:none; margin-top:16px; color: var(--accent-main); font-weight:500; text-align:center;">
+        ✓ Mensaje enviado correctamente. Te contactaremos pronto.
+      </div>
+    </form>
+  </section>
+
+  <!-- FAQ -->
+  <section class="content-section reveal" id="faq" aria-labelledby="faq-titulo">
+    <h2 id="faq-titulo">Preguntas Frecuentes</h2>
+    <p><strong>¿Cómo puedo registrar mi emprendimiento?</strong><br/>
+    Haz clic en el botón "Iniciar Sesión" y selecciona la pestaña "Soy Emprendedor". Completa el formulario de registro y en 24 horas tendrás tu vitrina activa.</p>
+    <p><strong>¿Tiene algún costo publicar mi negocio?</strong><br/>
+    No. El registro y la publicación de productos en Emprende Iquique es completamente gratuita.</p>
+    <p><strong>¿Cómo contacto a un vendedor?</strong><br/>
+    Cada perfil de emprendedor tiene información de contacto directa. Puedes escribirles por WhatsApp o correo electrónico directamente.</p>
+  </section>
+</main>
+{% endblock %}
+
+{% block auth_modal %}
+<div class="modal-overlay" id="authModal" aria-hidden="true">
+  <div class="modal-box" role="dialog" aria-labelledby="modal-title" aria-modal="true">
+    <button type="button" class="close-btn" onclick="closeModal()" aria-label="Cerrar ventana">×</button>
+    <div class="modal-tabs" role="tablist" aria-label="Tipo de usuario">
+      <button type="button" class="tab-btn active" id="tab-cliente" role="tab" aria-selected="true" onclick="setRole('cliente')">Soy Cliente</button>
+      <button type="button" class="tab-btn" id="tab-emprendedor" role="tab" aria-selected="false" onclick="setRole('emprendedor')">Soy Emprendedor</button>
+    </div>
+    <h2 id="modal-title">Acceso Clientes</h2>
+    <form onsubmit="event.preventDefault();" novalidate>
+      <div class="form-group">
+        <label for="emailInput">Correo electrónico</label>
+        <input type="email" id="emailInput" placeholder="ejemplo@correo.com" required autocomplete="email"/>
+      </div>
+      <div class="form-group">
+        <label for="passInput">Contraseña</label>
+        <input type="password" id="passInput" placeholder="Tu contraseña" required autocomplete="current-password"/>
+      </div>
+      <button type="submit" class="btn-submit" id="submitBtn">Ingresar a mi cuenta</button>
+    </form>
+    <div class="modal-footer" id="modalFooter">
+      ¿No tienes cuenta? <button type="button" onclick="toggleAuthMode()">Regístrate aquí</button>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block cart_panel %}{% endblock %}
+
+{% block extra_scripts %}
+<script>
+  function handleContactForm(event) {
+    event.preventDefault();
+    var success = document.getElementById('form-success');
+    success.style.display = 'block';
+    event.target.reset();
+  }
+</script>
+{% endblock %}

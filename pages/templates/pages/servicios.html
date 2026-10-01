@@ -1,0 +1,88 @@
+{% extends "pages/base.html" %}
+{% load static %}
+{% block title %}Servicios - Emprende Iquique{% endblock %}
+{% block meta_description %}Servicios — Emprende Iquique. Encuentra servicios profesionales ofrecidos por emprendedores de la región.{% endblock %}
+{% block content %}
+<main>
+  <div class="page-hero">
+    <h1>Servicios Profesionales</h1>
+    <p>Fotografía, belleza, fitness, clases y mucho más. Contrata directamente a emprendedores de Iquique.</p>
+  </div>
+  <div class="section-header reveal" style="max-width:1280px;margin:0 auto;padding:0 16px;">
+    <h2>Negocios Destacados</h2>
+  </div>
+  <section class="cats-strip reveal" style="max-width:1280px;margin:20px auto 40px;padding:20px;" aria-label="Negocios de Servicios">
+    <a href="#" class="cat-item"><img src="https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=150&h=150&fit=crop" alt="Logo de Foto Desierto"/><span>Foto Desierto</span><small>Fotografía</small></a>
+    <a href="#" class="cat-item"><img src="https://images.unsplash.com/photo-1560066984-138dadb4c035?w=150&h=150&fit=crop" alt="Logo de Estética Nortina"/><span>Estética Nortina</span><small>Belleza</small></a>
+    <a href="#" class="cat-item"><img src="https://images.unsplash.com/photo-1571902943202-507ec2618e8f?w=150&h=150&fit=crop" alt="Logo de FitNorte"/><span>FitNorte</span><small>Fitness</small></a>
+    <a href="#" class="cat-item"><img src="https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=150&h=150&fit=crop" alt="Logo de Eventos IQQ"/><span>Eventos IQQ</span><small>Organización</small></a>
+    <a href="#" class="cat-item"><img src="https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=150&h=150&fit=crop" alt="Logo de Clases Norte"/><span>Clases Norte</span><small>Academia</small></a>
+    <a href="#" class="cat-item"><img src="https://images.unsplash.com/photo-1544161515-4ab6ce6db874?w=150&h=150&fit=crop" alt="Logo de Masajes Tarapacá"/><span>Masajes Tarapacá</span><small>Bienestar</small></a>
+  </section>
+  <section aria-labelledby="serv-titulo" style="max-width:1280px;margin:0 auto;padding:0 16px 60px;">
+    <div class="section-header reveal"><h2 id="serv-titulo">Productos y Servicios</h2></div>
+    <div class="products-grid">
+      <article class="product-card reveal">
+        <div class="discount-badge">Popular</div>
+        <img class="prod-img" src="https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=300&h=300&fit=crop" alt="Fotógrafo profesional tomando retrato en locación exterior"/>
+        <p class="price">$ 35.000</p><p class="original-price"></p>
+        <h3 class="title">Sesión de Retrato — 1 hora, 20 fotos editadas</h3>
+        <p class="seller">Foto Desierto — Fotografía</p>
+        <button type="button" class="btn-agregar">Agregar al carrito</button>
+      </article>
+      <article class="product-card reveal">
+        <img class="prod-img" src="https://images.unsplash.com/photo-1560066984-138dadb4c035?w=300&h=300&fit=crop" alt="Estilista realizando corte de cabello moderno en salón"/>
+        <p class="price">$ 12.000</p><p class="original-price"></p>
+        <h3 class="title">Corte de Cabello + Peinado y Lavado</h3>
+        <p class="seller">Estética Nortina — Belleza</p>
+        <button type="button" class="btn-agregar">Agregar al carrito</button>
+      </article>
+      <article class="product-card reveal">
+        <div class="discount-badge">-20%</div>
+        <img class="prod-img" src="https://images.unsplash.com/photo-1571902943202-507ec2618e8f?w=300&h=300&fit=crop" alt="Sesión de entrenamiento funcional en espacio abierto"/>
+        <p class="price">$ 28.000</p><p class="original-price">$ 35.000</p>
+        <h3 class="title">Plan Mensual Entrenamiento Funcional — 12 sesiones</h3>
+        <p class="seller">FitNorte — Fitness</p>
+        <button type="button" class="btn-agregar">Agregar al carrito</button>
+      </article>
+      <article class="product-card reveal">
+        <img class="prod-img" src="https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=300&h=300&fit=crop" alt="Profesor realizando clases particulares con estudiante"/>
+        <p class="price">$ 15.000</p><p class="original-price"></p>
+        <h3 class="title">Clases Particulares de Matemáticas — 1.5 hrs</h3>
+        <p class="seller">Clases Norte — Academia</p>
+        <button type="button" class="btn-agregar">Agregar al carrito</button>
+      </article>
+      <article class="product-card reveal">
+        <img class="prod-img" src="https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=300&h=300&fit=crop" alt="Salón decorado con flores y luces para evento social"/>
+        <p class="price">$ 80.000</p><p class="original-price"></p>
+        <h3 class="title">Decoración Completa de Eventos y Fiestas</h3>
+        <p class="seller">Eventos IQQ — Organización</p>
+        <button type="button" class="btn-agregar">Agregar al carrito</button>
+      </article>
+      <article class="product-card reveal">
+        <div class="discount-badge">Nuevo</div>
+        <img class="prod-img" src="https://images.unsplash.com/photo-1554048612-b6a482bc67e5?w=300&h=300&fit=crop" alt="Fotógrafo con producto y fondo blanco en estudio"/>
+        <p class="price">$ 25.500</p><p class="original-price"></p>
+        <h3 class="title">Fotografía de Producto para Redes Sociales x10</h3>
+        <p class="seller">Foto Desierto — Fotografía</p>
+        <button type="button" class="btn-agregar">Agregar al carrito</button>
+      </article>
+      <article class="product-card reveal">
+        <img class="prod-img" src="https://images.unsplash.com/photo-1516726817505-f5ed825624d8?w=300&h=300&fit=crop" alt="Manicurista aplicando esmaltado semipermanente colorido"/>
+        <p class="price">$ 14.500</p><p class="original-price"></p>
+        <h3 class="title">Manicure + Pedicure Spa con Esmaltado Gel</h3>
+        <p class="seller">Estética Nortina — Belleza</p>
+        <button type="button" class="btn-agregar">Agregar al carrito</button>
+      </article>
+      <article class="product-card reveal">
+        <div class="discount-badge">-15%</div>
+        <img class="prod-img" src="https://images.unsplash.com/photo-1544161515-4ab6ce6db874?w=300&h=300&fit=crop" alt="Masajista aplicando técnica de relajación en espalda"/>
+        <p class="price">$ 25.000</p><p class="original-price">$ 29.500</p>
+        <h3 class="title">Masaje de Relajación 60 min — A domicilio IQQ</h3>
+        <p class="seller">Masajes Tarapacá — Bienestar</p>
+        <button type="button" class="btn-agregar">Agregar al carrito</button>
+      </article>
+    </div>
+  </section>
+</main>
+{% endblock %}
