@@ -2,7 +2,6 @@ from django.views.generic import TemplateView
 from django.shortcuts import render, redirect
 from django.contrib.auth import login
 from django.contrib import messages
-from requests import request
 from .forms import RegistroUsuarioForm
 from .models import Tienda
 
@@ -49,40 +48,34 @@ class ContactoView(TemplateView):
 class AnexoUsoIAView(TemplateView):
     template_name = "pages/anexo_uso_ia.html"
 
-def index(request):
+def registro(request):
     if request.method == 'POST':
-        # Capturamos el input oculto para saber qué formulario envió el modal
-        accion = request.POST.get('accion')
+        form = RegistroUsuarioForm(request.POST)
+        if form.is_valid():
+            # 1. Guardar el usuario base pero sin confirmar (commit=False) para encriptar la contraseña
+            usuario = form.save(commit=False)
+            usuario.set_password(form.cleaned_data['password'])
+            usuario.save() # Aquí se dispara la Signal (crea Perfil 'CLIENTE' y Carrito)
 
-        if accion == 'registro':
-            form = RegistroUsuarioForm(request.POST)
-            if form.is_valid():
-                # 1. Guardar y encriptar contraseña
-                usuario = form.save(commit=False)
-                usuario.set_password(form.cleaned_data['password'])
-                usuario.save() # Los Signals crean el Perfil y Carrito aquí
+            # 2. Actualizar el rol en el Perfil según la selección del usuario
+            tipo_cuenta = form.cleaned_data.get('tipo_cuenta')
+            usuario.perfil.rol = tipo_cuenta
+            usuario.perfil.save()
 
-                # 2. Asignar rol
-                tipo_cuenta = request.POST.get('tipo_cuenta', 'CLIENTE')
-                usuario.perfil.rol = tipo_cuenta
-                usuario.perfil.save()
+            # 3. Si eligió ser Emprendedor, le creamos su Tienda inicial
+            if tipo_cuenta == 'TIENDA':
+                Tienda.objects.create(
+                    usuario=usuario,
+                    nombre=f"Tienda de {usuario.username}"
+                )
 
-                # 3. Crear Tienda si aplica
-                if tipo_cuenta == 'TIENDA':
-                    Tienda.objects.create(usuario=usuario, nombre=f"Tienda de {usuario.username}")
+            # 4. Iniciar sesión automáticamente después del registro
+            login(request, usuario)
+            messages.success(request, f"¡Bienvenido {usuario.username}! Tu cuenta ha sido creada exitosamente.")
+            
+            # Redirigir a la página de inicio (asegúrate de que el nombre 'index' coincida con tu urls.py)
+            return redirect('index') 
+    else:
+        form = RegistroUsuarioForm()
 
-                # 4. Autenticar y recargar la página principal
-                login(request, usuario)
-                messages.success(request, f"¡Bienvenido {usuario.username}! Tu cuenta ha sido creada.")
-                return redirect('index')
-            else:
-                # Si las contraseñas no coinciden o el usuario ya existe
-                for error in form.errors.values():
-                    messages.error(request, error)
-                
-        elif accion == 'login':
-            # Aquí irá tu lógica futura para el modal de inicio de sesión
-            pass 
-
-    # Si entra normalmente a la página (GET), solo renderizamos el index
-    return render(request, 'pages/index.html')
+    return render(request, 'pages/registro.html', {'form': form})
