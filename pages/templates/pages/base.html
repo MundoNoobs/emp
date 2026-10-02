@@ -9,7 +9,16 @@
   <link rel="stylesheet" href="{% static 'pages/css/styles.css' %}" />
   {% block extra_head %}{% endblock %}
 </head>
-<body>
+<body
+  data-logout-url="{% url 'cerrar_sesion' %}"
+  data-negocios-url="{% url 'lista_negocios' %}"
+  data-productos-url="{% url 'lista_productos' %}"
+  data-carrito-url="{% url 'carrito_actual' %}"
+  data-carrito-modificar-url="{% url 'modificar_carrito' %}"
+  data-checkout-url="{% url 'finalizar_compra' %}"
+  data-authenticated="{% if request.user.is_authenticated %}true{% else %}false{% endif %}"
+  data-user-id="{% if request.user.is_authenticated %}{{ request.user.pk }}{% endif %}"
+  data-user-name="{% if request.user.is_authenticated %}{{ request.user.get_full_name|default:request.user.username }}{% endif %}">
 
 <!-- ══════════════════════════════════════════
      HEADER
@@ -178,7 +187,8 @@
     <div id="modal-error" class="modal-error" role="alert" style="display:none;"></div>
 
     <!-- Formulario dinámico -->
-    <form id="auth-form" novalidate>
+    <form id="auth-form" action="{% url 'registro' %}" method="post" novalidate>
+      {% csrf_token %}
       <div id="modal-form-body">
         <div class="form-group">
           <label for="auth-email">Correo electrónico</label>
@@ -238,7 +248,7 @@
 <div id="toast-container" aria-live="polite"></div>
 {% endblock %}
 
-<script src="{% static 'pages/js/main.js' %}"></script>
+<script src="{% static 'pages/js/main.js' %}?v=20261002-2"></script>
 {% block extra_scripts %}{% endblock %}
 </body>
 </html>

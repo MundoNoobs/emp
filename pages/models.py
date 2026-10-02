@@ -32,6 +32,8 @@ class Tienda(models.Model):
     # Relación 1 a 1: Un usuario emprendedor tiene una tienda
     usuario = models.OneToOneField(User, on_delete=models.CASCADE, limit_choices_to={'perfil__rol': 'TIENDA'})
     nombre = models.CharField(max_length=100)
+    categoria = models.CharField(max_length=100, blank=True)
+    imagen_url = models.URLField(blank=True)
     descripcion = models.TextField(blank=True, null=True)
     fecha_creacion = models.DateTimeField(auto_now_add=True)
 
@@ -45,6 +47,8 @@ class Producto(models.Model):
     tienda = models.ForeignKey(Tienda, on_delete=models.CASCADE, related_name='productos')
     nombre = models.CharField(max_length=150)
     descripcion = models.TextField()
+    categoria = models.CharField(max_length=100, blank=True)
+    imagen_url = models.CharField(max_length=500, blank=True)
     precio = models.DecimalField(max_digits=10, decimal_places=2)
     stock = models.IntegerField(default=0)
     fecha_creacion = models.DateTimeField(auto_now_add=True)
@@ -60,6 +64,11 @@ class ItemCarrito(models.Model):
     carrito = models.ForeignKey(Carrito, on_delete=models.CASCADE, related_name='items')
     producto = models.ForeignKey(Producto, on_delete=models.CASCADE)
     cantidad = models.PositiveIntegerField(default=1)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['carrito', 'producto'], name='unique_product_per_cart'),
+        ]
 
 class Venta(models.Model):
     usuario = models.ForeignKey(User, on_delete=models.RESTRICT, related_name='compras')

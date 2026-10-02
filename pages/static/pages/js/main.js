@@ -66,26 +66,26 @@ function toggleTheme() {
 /* ═══════════════════════════════════════════════
    2. SISTEMA DE USUARIOS
 ═══════════════════════════════════════════════ */
-function getUsers()       { return lsGet('ei_users') || []; }
-function saveUsers(u)     { lsSet('ei_users', u); }
 function getSession()     { return lsGet('ei_session'); }
 function saveSession(u)   { lsSet('ei_session', u); }
 function clearSession()   { localStorage.removeItem('ei_session'); }
+function getCsrfToken() {
+  var cookie = document.cookie.split('; ').find(function(item) { return item.indexOf('csrftoken=') === 0; });
+  return cookie ? decodeURIComponent(cookie.split('=').slice(1).join('=')) : '';
+}
 
-function registerUser(nombre, email, password, rol) {
-  var users = getUsers();
-  if (users.find(function(u){ return u.email === email; })) return { ok:false, msg:'Ya existe una cuenta con ese correo.' };
-  var nu = { id: Date.now(), nombre:nombre, email:email, password:password, rol:rol };
-  users.push(nu); saveUsers(users);
-  return { ok:true, user:nu };
-}
-function loginUser(email, password, rol) {
-  var u = getUsers().find(function(u){ return u.email===email && u.password===password && u.rol===rol; });
-  return u ? { ok:true, user:u } : { ok:false, msg:'Correo, contraseña o tipo de usuario incorrecto.' };
-}
-function logout() {
-  clearSession(); cart = []; lsSet('ei_cart', []);
-  updateUI(); showToast('Sesión cerrada. ¡Hasta pronto!');
+async function logout() {
+  try {
+    var response = await fetch(document.body.dataset.logoutUrl, {
+      method: 'POST',
+      headers: { 'X-CSRFToken': getCsrfToken() }
+    });
+    if (!response.ok) throw new Error('logout_failed');
+    clearSession(); cart = []; lsSet('ei_cart', []);
+    updateUI(); showToast('Sesión cerrada. ¡Hasta pronto!');
+  } catch (error) {
+    showToast('No se pudo cerrar la sesión. Inténtalo nuevamente.', 'warn');
+  }
 }
 
 /* ═══════════════════════════════════════════════
@@ -123,71 +123,158 @@ function renderModalForm() {
   if (isLoginMode) {
     title.textContent = currentRole==='cliente' ? 'Acceso Clientes' : 'Acceso Emprendedores';
     body.innerHTML =
-      '<div class="form-group"><label for="auth-email">Correo electrónico</label><input type="email" id="auth-email" placeholder="ejemplo@correo.com" required autocomplete="email"/></div>' +
-      '<div class="form-group"><label for="auth-pass">Contraseña</label><input type="password" id="auth-pass" placeholder="Tu contraseña" required autocomplete="current-password"/></div>' +
+      '<div class="form-group"><label for="auth-email">Correo electrónico</label><input type="email" id="auth-email" name="email" placeholder="ejemplo@correo.com" required autocomplete="email"/></div>' +
+      '<div class="form-group"><label for="auth-pass">Contraseña</label><input type="password" id="auth-pass" name="password" placeholder="Tu contraseña" required autocomplete="current-password"/></div>' +
       '<button type="submit" class="btn-submit">' + (currentRole==='cliente' ? 'Ingresar a mi cuenta' : 'Ingresar a mi Vitrina') + '</button>';
     footer.innerHTML = '¿No tienes cuenta? <button type="button" onclick="toggleAuthMode()">Regístrate aquí</button>';
   } else {
     title.textContent = currentRole==='cliente' ? 'Crear cuenta de Cliente' : 'Inscribe tu Negocio';
     body.innerHTML =
-      '<div class="form-group"><label for="auth-nombre">'+(currentRole==='cliente'?'Nombre completo':'Nombre del negocio')+'</label><input type="text" id="auth-nombre" placeholder="'+(currentRole==='cliente'?'Tu nombre':'Ej: Mi Emprendimiento')+'" required autocomplete="name"/></div>' +
-      '<div class="form-group"><label for="auth-email">Correo electrónico</label><input type="email" id="auth-email" placeholder="ejemplo@correo.com" required autocomplete="email"/></div>' +
-      '<div class="form-group"><label for="auth-pass">Contraseña</label><input type="password" id="auth-pass" placeholder="Mínimo 6 caracteres" required autocomplete="new-password"/></div>' +
-      '<div class="form-group"><label for="auth-pass2">Confirmar contraseña</label><input type="password" id="auth-pass2" placeholder="Repite tu contraseña" required autocomplete="new-password"/></div>' +
+      '<div class="form-group"><label for="auth-nombre">'+(currentRole==='cliente'?'Nombre completo':'Nombre del negocio')+'</label><input type="text" id="auth-nombre" name="nombre" placeholder="'+(currentRole==='cliente'?'Tu nombre':'Ej: Mi Emprendimiento')+'" required autocomplete="name"/></div>' +
+      '<div class="form-group"><label for="auth-email">Correo electrónico</label><input type="email" id="auth-email" name="email" placeholder="ejemplo@correo.com" required autocomplete="email"/></div>' +
+      '<div class="form-group"><label for="auth-pass">Contraseña</label><input type="password" id="auth-pass" name="password" placeholder="Mínimo 8 caracteres" required autocomplete="new-password"/></div>' +
+      '<div class="form-group"><label for="auth-pass2">Confirmar contraseña</label><input type="password" id="auth-pass2" name="confirmar_password" placeholder="Repite tu contraseña" required autocomplete="new-password"/></div>' +
       '<button type="submit" class="btn-submit">'+(currentRole==='cliente'?'Crear mi cuenta':'Registrar mi negocio')+'</button>';
     footer.innerHTML = '¿Ya tienes cuenta? <button type="button" onclick="toggleAuthMode()">Ingresa aquí</button>';
   }
-  var form = document.getElementById('auth-form');
-  if (form) form.onsubmit = handleAuthSubmit;
 }
 
-function handleAuthSubmit(e) {
+async function handleAuthSubmit(e) {
   e.preventDefault(); clearModalError();
   var email = (document.getElementById('auth-email')||{}).value||'';
   var pass  = (document.getElementById('auth-pass') ||{}).value||'';
-  if (isLoginMode) {
-    var r = loginUser(email.trim(), pass, currentRole);
-    if (!r.ok) { showModalError(r.msg); return; }
-    saveSession(r.user); closeModal(); updateUI();
-    showToast('¡Bienvenido/a, ' + r.user.nombre + '!');
-  } else {
-    var nombre = (document.getElementById('auth-nombre')||{}).value||'';
-    var pass2  = (document.getElementById('auth-pass2') ||{}).value||'';
-    if (!nombre.trim())      { showModalError('Por favor ingresa tu nombre.'); return; }
-    if (pass.length < 6)     { showModalError('La contraseña debe tener al menos 6 caracteres.'); return; }
-    if (pass !== pass2)      { showModalError('Las contraseñas no coinciden.'); return; }
-    var res = registerUser(nombre.trim(), email.trim(), pass, currentRole);
-    if (!res.ok) { showModalError(res.msg); return; }
-    saveSession(res.user); closeModal(); updateUI();
-    showToast('¡Cuenta creada! Bienvenido/a, ' + res.user.nombre + '.');
+  var form = document.getElementById('auth-form');
+  var payload = new FormData(form);
+  payload.set('csrfmiddlewaretoken', getCsrfToken());
+  payload.set('accion', isLoginMode ? 'login' : 'registro');
+  payload.set('email', email.trim());
+  payload.set('tipo_cuenta', currentRole === 'cliente' ? 'CLIENTE' : 'TIENDA');
+
+  try {
+    var response = await fetch(form.action, {
+      method: 'POST',
+      body: payload,
+      headers: { 'X-Requested-With': 'XMLHttpRequest' }
+    });
+    var result = await response.json();
+    if (!response.ok) {
+      var errors = result.errors || {};
+      var messages = [];
+      Object.keys(errors).forEach(function(field) {
+        errors[field].forEach(function(error) { messages.push(error.message || error); });
+      });
+      showModalError(messages.join(' '));
+      return;
+    }
+    saveSession(result.user);
+    closeModal(); updateUI();
+    showToast((isLoginMode ? '¡Bienvenido/a, ' : '¡Cuenta creada! Bienvenido/a, ') + result.user.nombre + '.');
+    loadCart();
+  } catch (error) {
+    showModalError('No se pudo conectar con el servidor. Inténtalo nuevamente.');
   }
 }
 
 /* ═══════════════════════════════════════════════
    4. CARRITO DE COMPRAS
 ═══════════════════════════════════════════════ */
-var cart = lsGet('ei_cart') || [];
-function saveCart() { lsSet('ei_cart', cart); }
+var cart = [];
 
-function addToCart(name, price, seller, img) {
+async function requestCartChange(action, values) {
+  var payload = new FormData();
+  payload.set('accion', action);
+  Object.keys(values || {}).forEach(function(key) { payload.set(key, values[key]); });
+  var response = await fetch(document.body.dataset.carritoModificarUrl, {
+    method: 'POST',
+    body: payload,
+    headers: { 'X-CSRFToken': getCsrfToken() }
+  });
+  var result = await response.json();
+  if (!response.ok) throw new Error(result.error || 'No se pudo actualizar el carrito.');
+  cart = result.carrito.items;
+  updateUI(); renderCartItems();
+  return result;
+}
+
+async function loadCart() {
+  var legacyCart = lsGet('ei_cart');
+  if (Array.isArray(legacyCart) && legacyCart.length) {
+    try {
+      var imported = await requestCartChange('importar', { items: JSON.stringify(legacyCart) });
+      localStorage.removeItem('ei_cart');
+      if (imported.omitidos) showToast(imported.omitidos + ' producto(s) antiguos no estaban disponibles.', 'warn');
+      return;
+    } catch (error) {
+      handleCartError(error);
+    }
+  }
+  try {
+    var response = await fetch(document.body.dataset.carritoUrl);
+    var result = await response.json();
+    cart = response.ok ? result.carrito.items : [];
+  } catch (error) {
+    cart = [];
+  }
+  updateUI(); renderCartItems();
+}
+
+function handleCartError(error) {
+  showToast(error.message || 'No se pudo actualizar el carrito.', 'warn');
+  if (error.message && error.message.toLowerCase().includes('inicia sesión')) openModal('cliente');
+}
+
+async function addToCart(productId, name) {
   if (!getSession()) { showToast('Inicia sesión para agregar productos.', 'warn'); openModal('cliente'); return; }
-  var ex = null;
-  for (var i=0; i<cart.length; i++) { if (cart[i].name===name){ex=cart[i];break;} }
-  if (ex) ex.qty++; else cart.push({name:name, price:price, seller:seller, img:img, qty:1});
-  saveCart(); updateUI(); renderCartItems();
-  showToast('"' + name.substring(0,28) + (name.length>28?'…':'') + '" agregado.');
+  if (!productId) { showToast('Este producto aún no está sincronizado.', 'warn'); return; }
+  try {
+    await requestCartChange('agregar', { producto_id: productId, cantidad: 1 });
+    showToast('"' + name.substring(0,28) + (name.length>28?'…':'') + '" agregado.');
+  } catch (error) {
+    handleCartError(error);
+  }
 }
-function removeFromCart(i) { cart.splice(i,1); saveCart(); updateUI(); renderCartItems(); }
-function changeQty(i, d) {
-  if (!cart[i]) return;
-  cart[i].qty += d;
-  if (cart[i].qty<=0) { removeFromCart(i); return; }
-  saveCart(); updateUI(); renderCartItems();
-}
-function clearCart()  { cart=[]; saveCart(); updateUI(); renderCartItems(); }
-function cartTotal()  { return cart.reduce(function(s,i){return s+(i.price*i.qty);},0); }
 
-function openCart()  { var p=document.getElementById('cart-panel'),o=document.getElementById('cart-overlay'); if(!p)return; renderCartItems(); p.classList.add('open'); if(o)o.classList.add('open'); }
+async function removeFromCart(index) {
+  if (!cart[index]) return;
+  try {
+    await requestCartChange('quitar', { item_id: cart[index].id });
+  } catch (error) {
+    handleCartError(error);
+  }
+}
+
+async function changeQty(index, difference) {
+  if (!cart[index]) return;
+  var quantity = cart[index].qty + difference;
+  try {
+    if (quantity < 1) {
+      await requestCartChange('quitar', { item_id: cart[index].id });
+    } else {
+      await requestCartChange('cantidad', { item_id: cart[index].id, cantidad: quantity });
+    }
+  } catch (error) {
+    handleCartError(error);
+  }
+}
+
+async function clearCart() {
+  try {
+    await requestCartChange('vaciar');
+  } catch (error) {
+    handleCartError(error);
+  }
+}
+
+function cartTotal() {
+  return cart.reduce(function(sum, item) { return sum + Number(item.price) * item.qty; }, 0);
+}
+
+function openCart() {
+  var panel=document.getElementById('cart-panel'), overlay=document.getElementById('cart-overlay');
+  if (!panel) return;
+  panel.classList.add('open'); if (overlay) overlay.classList.add('open');
+  loadCart();
+}
 function closeCart() { var p=document.getElementById('cart-panel'),o=document.getElementById('cart-overlay'); if(!p)return; p.classList.remove('open'); if(o)o.classList.remove('open'); }
 
 function renderCartItems() {
@@ -196,30 +283,68 @@ function renderCartItems() {
   if (!list) return;
   if (cart.length===0) { list.innerHTML=''; if(empty)empty.style.display='flex'; if(foot)foot.style.display='none'; return; }
   if (empty) empty.style.display='none'; if (foot) foot.style.display='block';
-  var html='';
-  for (var i=0;i<cart.length;i++) {
-    var item=cart[i];
-    html+='<article class="cart-item">'+
-      '<img src="'+item.img+'" alt="'+item.name+'" class="cart-item-img"/>'+
-      '<div class="cart-item-info"><p class="cart-item-name">'+item.name+'</p><p class="cart-item-seller">'+item.seller+'</p>'+
-      '<div class="cart-item-controls">'+
-        '<button type="button" onclick="changeQty('+i+',-1)" aria-label="Reducir">−</button>'+
-        '<span>'+item.qty+'</span>'+
-        '<button type="button" onclick="changeQty('+i+',1)" aria-label="Aumentar">+</button>'+
-      '</div></div>'+
-      '<div class="cart-item-right"><p class="cart-item-price">$'+(item.price*item.qty).toLocaleString('es-CL')+'</p>'+
-      '<button type="button" class="cart-remove" onclick="removeFromCart('+i+')" aria-label="Eliminar">✕</button></div>'+
-    '</article>';
-  }
-  list.innerHTML = html;
+  list.replaceChildren();
+  cart.forEach(function(item, index) {
+    var article = document.createElement('article');
+    article.className = 'cart-item';
+    var image = document.createElement('img');
+    image.src = item.img || '';
+    image.alt = item.name;
+    image.className = 'cart-item-img';
+
+    var info = document.createElement('div');
+    info.className = 'cart-item-info';
+    var name = document.createElement('p');
+    name.className = 'cart-item-name';
+    name.textContent = item.name;
+    var seller = document.createElement('p');
+    seller.className = 'cart-item-seller';
+    seller.textContent = item.seller;
+    var controls = document.createElement('div');
+    controls.className = 'cart-item-controls';
+    var decrease = document.createElement('button');
+    decrease.type = 'button'; decrease.textContent = '−'; decrease.setAttribute('aria-label', 'Reducir');
+    decrease.addEventListener('click', function() { changeQty(index, -1); });
+    var quantity = document.createElement('span');
+    quantity.textContent = item.qty;
+    var increase = document.createElement('button');
+    increase.type = 'button'; increase.textContent = '+'; increase.setAttribute('aria-label', 'Aumentar');
+    increase.addEventListener('click', function() { changeQty(index, 1); });
+    controls.append(decrease, quantity, increase);
+    info.append(name, seller, controls);
+
+    var right = document.createElement('div');
+    right.className = 'cart-item-right';
+    var price = document.createElement('p');
+    price.className = 'cart-item-price';
+    price.textContent = '$' + (Number(item.price) * item.qty).toLocaleString('es-CL');
+    var remove = document.createElement('button');
+    remove.type = 'button'; remove.className = 'cart-remove'; remove.textContent = '✕';
+    remove.setAttribute('aria-label', 'Eliminar');
+    remove.addEventListener('click', function() { removeFromCart(index); });
+    right.append(price, remove);
+    article.append(image, info, right);
+    list.appendChild(article);
+  });
   if (total) total.textContent = '$' + cartTotal().toLocaleString('es-CL');
 }
 
-function checkout() {
+async function checkout() {
   if (!getSession()) { showToast('Debes iniciar sesión para finalizar.', 'warn'); return; }
   if (cart.length===0) return;
-  showToast('¡Pedido realizado por $'+cartTotal().toLocaleString('es-CL')+'! Gracias 🎉');
-  clearCart(); closeCart();
+  try {
+    var response = await fetch(document.body.dataset.checkoutUrl, {
+      method: 'POST',
+      headers: { 'X-CSRFToken': getCsrfToken() }
+    });
+    var result = await response.json();
+    if (!response.ok) throw new Error(result.error || 'No se pudo finalizar la compra.');
+    cart = []; updateUI(); renderCartItems(); closeCart();
+    showToast('Venta #' + result.venta.id + ' registrada por $' + Number(result.venta.total).toLocaleString('es-CL') + '.');
+  } catch (error) {
+    handleCartError(error);
+    loadCart();
+  }
 }
 
 /* ═══════════════════════════════════════════════
@@ -228,25 +353,47 @@ function checkout() {
 var searchDropdown = null;
 var searchTimeout  = null;
 
-// Catálogo completo de productos para búsqueda avanzada
-var CATALOGO_PRODUCTOS = [
-  { title:'Torta de Milhojas Artesanal 1 kg',         seller:'Doña Rosa',      cat:'Pastelería',      precio:22000, img:'https://images.unsplash.com/photo-1486427944299-d1955d23e34d?w=80&h=80&fit=crop', badge:'Novedad' },
-  { title:'Mochila Tejida a Mano Hilos Naturales',    seller:'El Telar',       cat:'Artesanía',       precio:24990, img:'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=80&h=80&fit=crop', badge:'' },
-  { title:'Set Jabones Naturales Avena y Miel x3',    seller:'Eco Pica',       cat:'Cosmética',       precio:4500,  img:'https://images.unsplash.com/photo-1571781926291-c477ebfd024b?w=80&h=80&fit=crop', badge:'-15%' },
-  { title:'Maceta Cerámica con Suculenta Incluida',   seller:'Tierra Norte',   cat:'Cerámica',        precio:12000, img:'https://images.unsplash.com/photo-1485955900006-10f4d324d411?w=80&h=80&fit=crop', badge:'' },
-  { title:'Miel Artesanal del Oasis de Pica 500g',    seller:'Sabores Norte',  cat:'Alimentos',       precio:6500,  img:'https://images.unsplash.com/photo-1558642452-9d2a7deb7f62?w=80&h=80&fit=crop', badge:'' },
-  { title:'Polera Algodón Orgánico Unisex',           seller:'Boutique Norte', cat:'Moda',            precio:9990,  img:'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=80&h=80&fit=crop', badge:'-20%' },
-  { title:'Collar Plata con Turquesa Natural del Norte', seller:'Orfebrería IQQ', cat:'Joyería',      precio:26000, img:'https://images.unsplash.com/photo-1611652022419-a9419f74343d?w=80&h=80&fit=crop', badge:'' },
-  { title:'Reparación de Pantalla Smartphone',        seller:'Tech Iquique',   cat:'Tecnología',      precio:18000, img:'https://images.unsplash.com/photo-1589756823695-278bc923f962?w=80&h=80&fit=crop', badge:'' },
-  { title:'Macramé decorativo para pared',            seller:'El Telar',       cat:'Artesanía',       precio:15000, img:'https://images.unsplash.com/photo-1606722590583-6951b5ea92ad?w=80&h=80&fit=crop', badge:'' },
-  { title:'Serum facial de rosa mosqueta',            seller:'Eco Pica',       cat:'Cosmética',       precio:8900,  img:'https://images.unsplash.com/photo-1608248543803-ba4f8c70ae0b?w=80&h=80&fit=crop', badge:'' },
-  { title:'Empanadas norteñas (docena)',              seller:'Sabores Norte',  cat:'Alimentos',       precio:9000,  img:'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=80&h=80&fit=crop', badge:'Novedad' },
-  { title:'Cargador inalámbrico universal',           seller:'ByteNorte',      cat:'Tecnología',      precio:14500, img:'https://images.unsplash.com/photo-1518770660439-4636190af475?w=80&h=80&fit=crop', badge:'' },
-  { title:'Cuadro pintura desértica 40x60 cm',       seller:'Arte Pampa',     cat:'Arte',            precio:35000, img:'https://images.unsplash.com/photo-1574169208507-84376144848b?w=80&h=80&fit=crop', badge:'' },
-  { title:'Sesión de fotografía (1 hora)',            seller:'Foto Desierto',  cat:'Servicios',       precio:25000, img:'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=80&h=80&fit=crop', badge:'' },
-  { title:'Figura cerámica artesanal atacameña',      seller:'Tierra Norte',   cat:'Cerámica',        precio:19000, img:'https://images.unsplash.com/photo-1610701596007-11502861dcfa?w=80&h=80&fit=crop', badge:'' },
-  { title:'Plan entrenamiento personalizado',         seller:'FitNorte',       cat:'Servicios',       precio:30000, img:'https://images.unsplash.com/photo-1571902943202-507ec2618e8f?w=80&h=80&fit=crop', badge:'' },
-];
+var CATALOGO_PRODUCTOS = [];
+
+async function syncProductCatalog() {
+  var response = await fetch(document.body.dataset.productosUrl);
+  if (!response.ok) throw new Error('No se pudo cargar el catálogo.');
+  var result = await response.json();
+  CATALOGO_PRODUCTOS = result.productos.map(function(producto) {
+    return {
+      id: producto.id,
+      title: producto.nombre,
+      seller: producto.tienda,
+      cat: producto.categoria,
+      precio: Number(producto.precio),
+      stock: producto.stock,
+      img: producto.imagen_url,
+      badge: ''
+    };
+  });
+
+  document.querySelectorAll('.product-card').forEach(function(card) {
+    var title = (card.querySelector('.title') || {}).textContent || '';
+    var seller = ((card.querySelector('.seller') || {}).textContent || '').split('—', 1)[0].trim();
+    var product = CATALOGO_PRODUCTOS.find(function(item) {
+      return item.title === title.trim() && item.seller === seller;
+    });
+    var button = card.querySelector('.btn-agregar');
+    if (!product) {
+      if (button) { button.disabled = true; button.title = 'Producto todavía no sincronizado'; }
+      return;
+    }
+    card.dataset.productId = product.id;
+    var price = card.querySelector('.price');
+    if (price) price.textContent = '$ ' + product.precio.toLocaleString('es-CL');
+    var image = card.querySelector('.prod-img');
+    if (image && product.img) image.src = product.img;
+    if (button) {
+      button.disabled = product.stock === 0;
+      button.dataset.productId = product.id;
+    }
+  });
+}
 
 var CATEGORIAS_FILTRO = ['Todas','Pastelería','Artesanía','Cosmética','Cerámica','Alimentos','Moda','Joyería','Tecnología','Arte','Servicios'];
 
@@ -562,42 +709,16 @@ function resetFiltrosAdv() {
 /* ═══════════════════════════════════════════════
    6. MODAL "VER TODOS LOS NEGOCIOS" (solo emprendedores)
 ═══════════════════════════════════════════════ */
-// Base de datos de negocios de Iquique
-var NEGOCIOS_IQQ = [
-  { nombre:'Doña Rosa',         categoria:'Pastelería',       img:'https://images.unsplash.com/photo-1486427944299-d1955d23e34d?w=120&h=120&fit=crop' },
-  { nombre:'El Telar',          categoria:'Artesanía textil', img:'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=120&h=120&fit=crop' },
-  { nombre:'Eco Pica',          categoria:'Cosmética natural',img:'https://images.unsplash.com/photo-1571781926291-c477ebfd024b?w=120&h=120&fit=crop' },
-  { nombre:'Tierra Norte',      categoria:'Cerámica',         img:'https://images.unsplash.com/photo-1485955900006-10f4d324d411?w=120&h=120&fit=crop' },
-  { nombre:'Tech Iquique',      categoria:'Reparaciones tech',img:'https://images.unsplash.com/photo-1531297484001-80022131f5a1?w=120&h=120&fit=crop' },
-  { nombre:'Verde Hogar',       categoria:'Plantas y jardín', img:'https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=120&h=120&fit=crop' },
-  { nombre:'Sabores Norte',     categoria:'Comida regional',  img:'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=120&h=120&fit=crop' },
-  { nombre:'La Cevichería IQQ', categoria:'Mariscos',         img:'https://images.unsplash.com/photo-1579954115545-a95591f28bfc?w=120&h=120&fit=crop' },
-  { nombre:'Boutique Norte',    categoria:'Moda y diseño',    img:'https://images.unsplash.com/photo-1523381210434-271e8be1f52b?w=120&h=120&fit=crop' },
-  { nombre:'Orfebrería IQQ',    categoria:'Joyería plata',    img:'https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=120&h=120&fit=crop' },
-  { nombre:'ByteNorte',         categoria:'Computadores',     img:'https://images.unsplash.com/photo-1518770660439-4636190af475?w=120&h=120&fit=crop' },
-  { nombre:'Arte Pampa',        categoria:'Pintura y arte',   img:'https://images.unsplash.com/photo-1574169208507-84376144848b?w=120&h=120&fit=crop' },
-  { nombre:'Foto Desierto',     categoria:'Fotografía',       img:'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=120&h=120&fit=crop' },
-  { nombre:'FitNorte',          categoria:'Fitness y salud',  img:'https://images.unsplash.com/photo-1571902943202-507ec2618e8f?w=120&h=120&fit=crop' },
-  { nombre:'IQQ Print',         categoria:'Impresión 3D',     img:'https://images.unsplash.com/photo-1563770660941-20978e870e26?w=120&h=120&fit=crop' },
-  { nombre:'Dulces Pampinos',   categoria:'Repostería',       img:'https://images.unsplash.com/photo-1464305795204-6f5bbfc7fb81?w=120&h=120&fit=crop' },
-  { nombre:'Clases Norte',      categoria:'Academia y clases',img:'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=120&h=120&fit=crop' },
-  { nombre:'Estética Nortina',  categoria:'Belleza y cuidado',img:'https://images.unsplash.com/photo-1560066984-138dadb4c035?w=120&h=120&fit=crop' },
-  { nombre:'Madera Atacameña',  categoria:'Talla en madera',  img:'https://images.unsplash.com/photo-1544967082-d9d25d867d66?w=120&h=120&fit=crop' },
-  { nombre:'CiberNorte',        categoria:'Ciberseguridad',   img:'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=120&h=120&fit=crop' },
-];
-
-function openNegociosModal() {
-  // Accesible para todos: clientes, emprendedores y visitantes
-  var session = getSession();
-
-  // Combinar negocios base + emprendedores registrados
-  var users = getUsers().filter(function(u){ return u.rol==='emprendedor'; });
-  var todos = NEGOCIOS_IQQ.slice();
-  users.forEach(function(u) {
-    if (!todos.find(function(n){ return n.nombre===u.nombre; })) {
-      todos.push({ nombre:u.nombre, categoria:'Emprendedor registrado', img:'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAHAAAABwCAIAAABJgmMcAAAApUlEQVR42u3BMQEAAADCoPVP7WsIoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAeAMBuAABHgAAAABJRU5ErkJggg==' });
-    }
-  });
+async function openNegociosModal() {
+  var todos;
+  try {
+    var response = await fetch(document.body.dataset.negociosUrl);
+    if (!response.ok) throw new Error('request_failed');
+    todos = (await response.json()).negocios;
+  } catch (error) {
+    showToast('No se pudieron cargar los negocios.', 'warn');
+    return;
+  }
 
   var overlay = document.createElement('div');
   overlay.id = 'negocios-overlay';
@@ -615,17 +736,40 @@ function openNegociosModal() {
     '<input type="search" id="neg-search" placeholder="Buscar negocio o categoría..." style="width:100%;padding:10px 14px;border:1px solid var(--border-color);border-radius:8px;background:var(--bg-body);color:var(--text-main);font-size:14px;outline:none;" oninput="filterNegocios(this.value)"/>' +
   '</div>';
 
-  var grid = '<div id="neg-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:16px;padding:20px;overflow-y:auto;flex:1;">';
-  todos.forEach(function(n, idx) {
-    grid += '<div class="neg-card" data-nombre="'+n.nombre.toLowerCase()+'" data-cat="'+n.categoria.toLowerCase()+'" style="background:var(--bg-body);border:1px solid var(--border-color);border-radius:12px;padding:16px;text-align:center;cursor:default;">' +
-      '<img src="'+n.img+'" alt="'+n.nombre+'" style="width:70px;height:70px;border-radius:50%;object-fit:cover;border:3px solid var(--accent-main);margin-bottom:10px;" onerror="this.src=\'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=120&h=120&fit=crop\'"/>' +
-      '<p style="font-weight:700;font-size:14px;color:var(--text-main);margin:0 0 4px;">'+n.nombre+'</p>' +
-      '<p style="font-size:12px;color:var(--text-muted);margin:0;">'+n.categoria+'</p>' +
-    '</div>';
-  });
-  grid += '</div>';
+  var grid = document.createElement('div');
+  grid.id = 'neg-grid';
+  grid.style.cssText = 'display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:16px;padding:20px;overflow-y:auto;flex:1;';
+  todos.forEach(function(negocio) {
+    var card = document.createElement('div');
+    card.className = 'neg-card';
+    card.dataset.nombre = (negocio.nombre || '').toLowerCase();
+    card.dataset.cat = (negocio.categoria || '').toLowerCase();
+    card.style.cssText = 'background:var(--bg-body);border:1px solid var(--border-color);border-radius:12px;padding:16px;text-align:center;cursor:default;';
 
-  box.innerHTML = header + search + grid;
+    var image = document.createElement('img');
+    image.src = negocio.imagen_url || 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=120&h=120&fit=crop';
+    image.alt = negocio.nombre;
+    image.style.cssText = 'width:70px;height:70px;border-radius:50%;object-fit:cover;border:3px solid var(--accent-main);margin-bottom:10px;';
+    image.addEventListener('error', function() {
+      this.src = 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=120&h=120&fit=crop';
+    }, { once: true });
+
+    var name = document.createElement('p');
+    name.textContent = negocio.nombre;
+    name.style.cssText = 'font-weight:700;font-size:14px;color:var(--text-main);margin:0 0 4px;';
+
+    var category = document.createElement('p');
+    category.textContent = negocio.categoria || 'Emprendedor registrado';
+    category.style.cssText = 'font-size:12px;color:var(--text-muted);margin:0;';
+
+    card.appendChild(image);
+    card.appendChild(name);
+    card.appendChild(category);
+    grid.appendChild(card);
+  });
+
+  box.innerHTML = header + search;
+  box.appendChild(grid);
   overlay.appendChild(box);
   document.body.appendChild(overlay);
   overlay.addEventListener('click', function(e){ if(e.target===overlay) overlay.remove(); });
@@ -686,8 +830,8 @@ function updateUI() {
   var session=getSession(), btn=document.getElementById('floating-btn'), badge=document.getElementById('cart-badge');
   if (btn) {
     if (session) {
-      btn.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>' +
-        session.nombre.split(' ')[0] + '<span class="btn-logout" onclick="event.stopPropagation();logout();" title="Cerrar sesión" aria-label="Cerrar sesión">✕</span>';
+      btn.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg><span class="btn-user-name"></span><span class="btn-logout" onclick="event.stopPropagation();logout();" title="Cerrar sesión" aria-label="Cerrar sesión">✕</span>';
+      btn.querySelector('.btn-user-name').textContent = session.nombre;
       btn.onclick = null;
     } else {
       btn.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>Iniciar Sesión';
@@ -702,6 +846,15 @@ function updateUI() {
    11. INICIALIZACIÓN
 ═══════════════════════════════════════════════ */
 window.addEventListener('load', function() {
+  if (document.body.dataset.authenticated === 'true') {
+    saveSession({
+      id: Number(document.body.dataset.userId),
+      nombre: document.body.dataset.userName,
+    });
+  } else {
+    clearSession();
+  }
+
   // Tema
   if (lsGet('theme')==='dark') { document.documentElement.setAttribute('data-theme','dark'); updateThemeIcon('dark'); }
 
@@ -716,6 +869,10 @@ window.addEventListener('load', function() {
 
   // UI + Carrito
   updateUI();
+  if (getSession()) loadCart();
+  syncProductCatalog().catch(function() {
+    showToast('No se pudo sincronizar el catálogo.', 'warn');
+  });
 
   // Overlay carrito
   var ov = document.getElementById('cart-overlay');
@@ -744,10 +901,7 @@ window.addEventListener('load', function() {
     btn.addEventListener('click', function(){
       var card=this.closest('.product-card'); if(!card) return;
       var name   = (card.querySelector('h3.title')||{}).textContent||'';
-      var priceT = (card.querySelector('.price')||{}).textContent||'';
-      var seller = (card.querySelector('.seller')||{}).textContent||'';
-      var imgEl  = card.querySelector('.prod-img');
-      addToCart(name.trim(), parseInt(priceT.replace(/[^0-9]/g,''),10), seller.trim(), imgEl?imgEl.src:'');
+      addToCart(this.dataset.productId || card.dataset.productId, name.trim());
     });
   });
 

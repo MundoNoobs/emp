@@ -45,13 +45,12 @@
     <button type="button" onclick="openNegociosModal()" class="btn-ver-todos" aria-label="Ver todos los negocios inscritos">Ver todos los locales →</button>
   </div>
   <section class="cats-strip reveal" aria-label="Emprendedores Destacados">
-    <a href="#" class="cat-item"><img src="https://images.unsplash.com/photo-1559525839-b184a4d698c7?w=150&h=150&fit=crop" alt="Logo de la pastelería Doña Rosa"/><span>Doña Rosa</span><small>Pastelería</small></a>
-    <a href="#" class="cat-item"><img src="https://images.unsplash.com/photo-1606722590583-6951b5ea92ad?w=150&h=150&fit=crop" alt="Logo del taller El Telar"/><span>El Telar</span><small>Artesanía</small></a>
-    <a href="#" class="cat-item"><img src="https://images.unsplash.com/photo-1608248543803-ba4f8c70ae0b?w=150&h=150&fit=crop" alt="Logo de cosmética natural Eco Pica"/><span>Eco Pica</span><small>Cosmética</small></a>
-    <a href="#" class="cat-item"><img src="https://images.unsplash.com/photo-1610701596007-11502861dcfa?w=150&h=150&fit=crop" alt="Logo del taller Tierra Norte"/><span>Tierra Norte</span><small>Cerámica</small></a>
-    <a href="#" class="cat-item"><img src="https://images.unsplash.com/photo-1531297484001-80022131f5a1?w=150&h=150&fit=crop" alt="Logo de Tech Iquique reparaciones"/><span>Tech Iquique</span><small>Reparaciones</small></a>
-    <a href="#" class="cat-item"><img src="https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=150&h=150&fit=crop" alt="Logo de Verde Hogar tienda de plantas"/><span>Verde Hogar</span><small>Plantas</small></a>
-    <a href="#" class="cat-item"><img src="https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=150&h=150&fit=crop" alt="Logo de Sabores del Norte comida local"/><span>Sabores Norte</span><small>Comida Local</small></a>
+    {% for negocio in negocios_destacados %}
+    <a href="#" class="cat-item">
+      {% if negocio.imagen_url %}<img src="{{ negocio.imagen_url }}" alt="{{ negocio.nombre }}"/>{% endif %}
+      <span>{{ negocio.nombre }}</span><small>{{ negocio.categoria|default:"Emprendedor registrado" }}</small>
+    </a>
+    {% endfor %}
   </section>
 
   <!-- Productos Recientes -->
