@@ -12,4 +12,5 @@ urlpatterns = [
     path("nosotros/", views.NosotrosView.as_view(), name="nosotros"),
     path("contacto/", views.ContactoView.as_view(), name="contacto"),
     path("anexo-uso-ia/", views.AnexoUsoIAView.as_view(), name="anexo_uso_ia"),
+    path('registro/', views.registro, name='registro'),
 ]
