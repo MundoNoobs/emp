@@ -1,135 +1,127 @@
-{% extends "pages/base.html" %}
-{% load static %}
-{% block title %}Emprende Iquique - Vitrina de Emprendedores{% endblock %}
-{% block meta_description %}Emprende Iquique - Vitrina digital para apoyar a los emprendedores locales. Encuentra productos y servicios de nuestra región.{% endblock %}
+{% extends 'pages/base.html' %}
+
 {% block content %}
-<main>
-  <h1 class="page-title">Bienvenido a <strong>Emprende Iquique</strong> — Vitrina de negocios locales</h1>
+<!-- CONTENIDO PRINCIPAL DE LA PÁGINA -->
+<div class="main-container">
+    <h1>Bienvenido a nuestro E-commerce</h1>
+    <p>Encuentra los mejores productos o crea tu propia tienda.</p>
+    
+    <!-- Botón que activa el modal flotante -->
+    <button class="btn btn-primary" onclick="abrirModal()">Iniciar Sesión / Registrarse</button>
+</div>
 
-  <!-- Slider -->
-  <section class="hero-slider reveal" aria-label="Destacados del mes">
-    <article class="slide active">
-      <img src="https://images.unsplash.com/photo-1542838132-92c53300491e?w=1280&h=450&fit=crop" alt="Emprendedor vendiendo comida local en un mercado de Iquique"/>
-      <div class="slide-content">
-        <h2>Apoya el Comercio Local</h2>
-        <p>Descubre productos únicos y servicios creados por emprendedores de Iquique.</p>
-        <button type="button" class="slide-btn">Ver Negocios</button>
-      </div>
-    </article>
-    <article class="slide">
-      <img src="https://images.unsplash.com/photo-1452860606245-08befc0ff44b?w=1280&h=450&fit=crop" alt="Artesano de la región trabajando con sus manos en una pieza textil"/>
-      <div class="slide-content">
-        <h2>Hecho a Mano con Identidad</h2>
-        <p>Explora la mejor artesanía regional y lleva el norte en tus manos.</p>
-        <button type="button" class="slide-btn">Explorar Artesanos</button>
-      </div>
-    </article>
-    <article class="slide">
-      <img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=1280&h=450&fit=crop" alt="Vitrina de tienda de emprendedores con productos locales"/>
-      <div class="slide-content">
-        <h2>Únete a nuestra Vitrina</h2>
-        <p>¿Tienes un emprendimiento? Crea tu perfil hoy y llega a más clientes.</p>
-        <button type="button" class="slide-btn" onclick="openModal('emprendedor')">Registrar mi negocio</button>
-      </div>
-    </article>
-    <div class="slider-dots" role="group" aria-label="Controles del slider">
-      <button type="button" class="dot active" onclick="goToSlide(0)" aria-label="Ir a slide 1"></button>
-      <button type="button" class="dot" onclick="goToSlide(1)" aria-label="Ir a slide 2"></button>
-      <button type="button" class="dot" onclick="goToSlide(2)" aria-label="Ir a slide 3"></button>
+
+<!-- ========================================== -->
+<!-- MODAL FLOTANTE (Oculto por defecto)        -->
+<!-- ========================================== -->
+<div id="modalAuth" class="modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000;">
+    
+    <div class="modal-content" style="background: white; width: 400px; margin: 10% auto; padding: 20px; border-radius: 8px; position: relative;">
+        <!-- Botón para cerrar el modal -->
+        <span onclick="cerrarModal()" style="position: absolute; right: 20px; top: 15px; cursor: pointer; font-size: 20px;">&times;</span>
+        
+        <!-- Pestañas de navegación interna del modal -->
+        <div class="modal-tabs" style="display: flex; justify-content: space-between; margin-bottom: 20px;">
+            <button onclick="cambiarPestana('login')" style="flex: 1; padding: 10px;">Iniciar Sesión</button>
+            <button onclick="cambiarPestana('registro')" style="flex: 1; padding: 10px;">Registrarse</button>
+        </div>
+
+        <!-- 1. FORMULARIO DE INICIO DE SESIÓN -->
+        <div id="vista-login">
+            <h3 style="text-align: center;">Acceder</h3>
+            
+            <form method="POST" action="{% url 'index' %}">
+                {% csrf_token %}
+                <!-- Identificador de la acción para el views.py -->
+                <input type="hidden" name="accion" value="login">
+                
+                <div style="margin-bottom: 15px;">
+                    <input type="text" name="username" placeholder="Nombre de usuario" required style="width: 100%; padding: 8px;">
+                </div>
+                
+                <div style="margin-bottom: 15px;">
+                    <input type="password" name="password" placeholder="Contraseña" required style="width: 100%; padding: 8px;">
+                </div>
+                
+                <button type="submit" style="width: 100%; padding: 10px; background-color: #007bff; color: white; border: none; cursor: pointer;">Entrar</button>
+            </form>
+        </div>
+
+        <!-- 2. FORMULARIO DE REGISTRO -->
+        <div id="vista-registro" style="display: none;">
+            <h3 style="text-align: center;">Crear Nueva Cuenta</h3>
+            
+            <form method="POST" action="{% url 'index' %}">
+                {% csrf_token %}
+                <!-- Identificador de la acción para el views.py -->
+                <input type="hidden" name="accion" value="registro">
+                
+                <div style="margin-bottom: 15px;">
+                    <input type="text" name="username" placeholder="Nombre de usuario (Único)" required style="width: 100%; padding: 8px;">
+                </div>
+                
+                <div style="margin-bottom: 15px;">
+                    <input type="email" name="email" placeholder="Correo electrónico" required style="width: 100%; padding: 8px;">
+                </div>
+                
+                <div style="margin-bottom: 15px;">
+                    <input type="password" name="password" placeholder="Contraseña" required style="width: 100%; padding: 8px;">
+                </div>
+                
+                <div style="margin-bottom: 15px;">
+                    <input type="password" name="confirmar_password" placeholder="Confirmar Contraseña" required style="width: 100%; padding: 8px;">
+                </div>
+                
+                <div style="margin-bottom: 15px;">
+                    <label for="tipo_cuenta" style="display: block; margin-bottom: 5px;">¿Qué harás en la plataforma?</label>
+                    <select name="tipo_cuenta" id="tipo_cuenta" required style="width: 100%; padding: 8px;">
+                        <option value="CLIENTE">Soy Cliente (Comprar)</option>
+                        <option value="TIENDA">Soy Emprendedor (Vender)</option>
+                    </select>
+                </div>
+                
+                <button type="submit" style="width: 100%; padding: 10px; background-color: #28a745; color: white; border: none; cursor: pointer;">Crear Cuenta</button>
+            </form>
+        </div>
+        
     </div>
-  </section>
+</div>
 
-  <!-- Negocios Locales -->
-  <div class="section-header reveal">
-    <h2>Nuestros Negocios Locales</h2>
-    <button type="button" onclick="openNegociosModal()" class="btn-ver-todos" aria-label="Ver todos los negocios inscritos">Ver todos los locales →</button>
-  </div>
-  <section class="cats-strip reveal" aria-label="Emprendedores Destacados">
-    <a href="#" class="cat-item"><img src="https://images.unsplash.com/photo-1559525839-b184a4d698c7?w=150&h=150&fit=crop" alt="Logo de la pastelería Doña Rosa"/><span>Doña Rosa</span><small>Pastelería</small></a>
-    <a href="#" class="cat-item"><img src="https://images.unsplash.com/photo-1606722590583-6951b5ea92ad?w=150&h=150&fit=crop" alt="Logo del taller El Telar"/><span>El Telar</span><small>Artesanía</small></a>
-    <a href="#" class="cat-item"><img src="https://images.unsplash.com/photo-1608248543803-ba4f8c70ae0b?w=150&h=150&fit=crop" alt="Logo de cosmética natural Eco Pica"/><span>Eco Pica</span><small>Cosmética</small></a>
-    <a href="#" class="cat-item"><img src="https://images.unsplash.com/photo-1610701596007-11502861dcfa?w=150&h=150&fit=crop" alt="Logo del taller Tierra Norte"/><span>Tierra Norte</span><small>Cerámica</small></a>
-    <a href="#" class="cat-item"><img src="https://images.unsplash.com/photo-1531297484001-80022131f5a1?w=150&h=150&fit=crop" alt="Logo de Tech Iquique reparaciones"/><span>Tech Iquique</span><small>Reparaciones</small></a>
-    <a href="#" class="cat-item"><img src="https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=150&h=150&fit=crop" alt="Logo de Verde Hogar tienda de plantas"/><span>Verde Hogar</span><small>Plantas</small></a>
-    <a href="#" class="cat-item"><img src="https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=150&h=150&fit=crop" alt="Logo de Sabores del Norte comida local"/><span>Sabores Norte</span><small>Comida Local</small></a>
-  </section>
+<!-- ========================================== -->
+<!-- SCRIPT PARA CONTROLAR EL MODAL             -->
+<!-- ========================================== -->
+<script>
+    const modal = document.getElementById('modalAuth');
+    const vistaLogin = document.getElementById('vista-login');
+    const vistaRegistro = document.getElementById('vista-registro');
 
-  <!-- Productos Recientes -->
-  <section aria-labelledby="emprendimientos-destacados">
-    <div class="section-header reveal">
-      <h2 id="emprendimientos-destacados">Productos Recientes</h2>
-      <a href="#">Explorar vitrina →</a>
-    </div>
-    <div class="products-grid">
+    // Función para mostrar el modal flotante
+    function abrirModal() {
+        modal.style.display = 'block';
+    }
 
-      <article class="product-card reveal">
-        <div class="discount-badge">Novedad</div>
-        <img class="prod-img" src="https://images.unsplash.com/photo-1486427944299-d1955d23e34d?w=300&h=300&fit=crop" alt="Torta de milhojas artesanal decorada con crema"/>
-        <p class="price">$ 22.000</p><p class="original-price"></p>
-        <h3 class="title">Cupcake Artesanal de crema con chispas dulces</h3>
-        <p class="seller">Doña Rosa — Pastelería</p>
-        <button type="button" class="btn-agregar">Agregar al carrito</button>
-      </article>
+    // Función para ocultar el modal flotante
+    function cerrarModal() {
+        modal.style.display = 'none';
+    }
 
-      <article class="product-card reveal">
-        <img class="prod-img" src="https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=300&h=300&fit=crop" alt="Mochila tejida a mano con hilos de colores naturales"/>
-        <p class="price">$ 24.990</p><p class="original-price"></p>
-        <h3 class="title">Mochila Tejida a Mano Hilos Naturales</h3>
-        <p class="seller">El Telar — Artesanía textil</p>
-        <button type="button" class="btn-agregar">Agregar al carrito</button>
-      </article>
+    // Función para alternar entre los formularios de Login y Registro
+    function cambiarPestana(pestana) {
+        if (pestana === 'registro') {
+            vistaLogin.style.display = 'none';
+            vistaRegistro.style.display = 'block';
+        } else {
+            vistaLogin.style.display = 'block';
+            vistaRegistro.style.display = 'none';
+        }
+    }
 
-      <article class="product-card reveal">
-        <div class="discount-badge">-15%</div>
-        <img class="prod-img" src="https://images.unsplash.com/photo-1571781926291-c477ebfd024b?w=300&h=300&fit=crop" alt="Set de jabones naturales de avena y miel envueltos"/>
-        <p class="price">$ 4.500</p><p class="original-price">$ 5.300</p>
-        <h3 class="title">Set Jabones Naturales Avena y Miel x3</h3>
-        <p class="seller">Eco Pica — Cosmética natural</p>
-        <button type="button" class="btn-agregar">Agregar al carrito</button>
-      </article>
+    // Cierra el modal si el usuario hace clic fuera de la caja blanca
+    window.onclick = function(event) {
+        if (event.target === modal) {
+            cerrarModal();
+        }
+    }
+</script>
 
-      <article class="product-card reveal">
-        <img class="prod-img" src="https://images.unsplash.com/photo-1485955900006-10f4d324d411?w=300&h=300&fit=crop" alt="Maceta de cerámica blanca con planta suculenta interior"/>
-        <p class="price">$ 12.000</p><p class="original-price"></p>
-        <h3 class="title">Maceta Cerámica con Suculenta Incluida</h3>
-        <p class="seller">Tierra Norte — Cerámica</p>
-        <button type="button" class="btn-agregar">Agregar al carrito</button>
-      </article>
-
-      <article class="product-card reveal">
-        <img class="prod-img" src="https://images.unsplash.com/photo-1558642452-9d2a7deb7f62?w=300&h=300&fit=crop" alt="Frasco de miel artesanal con panal y cuchara de madera"/>
-        <p class="price">$ 6.500</p><p class="original-price"></p>
-        <h3 class="title">Miel Artesanal del Oasis de Pica 500g</h3>
-        <p class="seller">Sabores Norte — Productos locales</p>
-        <button type="button" class="btn-agregar">Agregar al carrito</button>
-      </article>
-
-      <article class="product-card reveal">
-        <div class="discount-badge">-20%</div>
-        <img class="prod-img" src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=300&h=300&fit=crop" alt="Polera blanca de algodón orgánico sobre fondo blanco"/>
-        <p class="price">$ 9.990</p><p class="original-price">$ 12.500</p>
-        <h3 class="title">Polera Algodón Orgánico Unisex</h3>
-        <p class="seller">Boutique Norte — Moda local</p>
-        <button type="button" class="btn-agregar">Agregar al carrito</button>
-      </article>
-
-      <article class="product-card reveal">
-        <img class="prod-img" src="https://images.unsplash.com/photo-1611652022419-a9419f74343d?w=300&h=300&fit=crop" alt="Collar artesanal de plata con piedra turquesa natural"/>
-        <p class="price">$ 26.000</p><p class="original-price"></p>
-        <h3 class="title">Collar Plata con Turquesa Natural del Norte</h3>
-        <p class="seller">Orfebrería IQQ — Joyería</p>
-        <button type="button" class="btn-agregar">Agregar al carrito</button>
-      </article>
-
-      <article class="product-card reveal">
-        <img class="prod-img" src="{% static 'pages/img/reparacion.jpg' %}" alt="Técnico reparando pantalla de celular en taller"/>
-        <p class="price">$ 18.000</p><p class="original-price"></p>
-        <h3 class="title">Reparación de Pantalla Smartphone — Todas las marcas</h3>
-        <p class="seller">Tech Iquique — Reparaciones</p>
-        <button type="button" class="btn-agregar">Agendar servicio</button>
-      </article>
-
-    </div>
-  </section>
-</main>
 {% endblock %}
